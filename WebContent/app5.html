@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div id="app5">
+		<p>{{message}}</p>
+		<button v-on:click="aaa">reverse</button>
+	</div>
+</body>
+<script src="vue/2.4.2/vue.min.js" ></script>
+<script>
+  new Vue({
+		el:"#app5",
+		data:{
+			message:"hello!"
+			},
+		methods:{
+			aaa:function(){
+				this.message=this.message.split('').reverse().join('')
+				}
+			}
+			
+	  })
+</script>
+</html>

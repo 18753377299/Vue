@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div id="app">
+		{{message}}
+	</div>
+</body>
+<script src="vue/2.4.2/vue.min.js" ></script>
+<script>
+var appMethod= {message:'hello world！'}
+
+  new Vue({
+	el:'#app',
+// 	data:{
+// 	message:'hello!'
+// 		}
+	data:appMethod
+	})
+
+</script>
+</html>

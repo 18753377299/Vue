@@ -1,0 +1,76 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Insert title here</title>
+
+<style type="text/css">
+/* body{ */
+/* 　　margin: 0; */
+/* 　　overflow: hidden; */
+/* 　　background: #fff; */
+/* } */
+/* #map{ */
+/* 　　position: relative; */
+/* 　　padding:20px; */
+/* 　　height: 760px; */
+/* 　　border:1px solid #3473b7; */
+/* } */
+</style>
+
+<script src='../libs/SuperMap.Include.js'></script>
+<script type="text/javascript">
+var map, layer,  vectorLayer, vectorLayer1, drawPolygon, markerLayer,drawPolygon1,
+style = {
+		strokeColor: "#304DBE",
+		strokeWidth: 1,
+		pointerEvents: "visiblePainted",
+		fillColor: "#304DBE",
+		fillOpacity: 0.5
+		},
+url="http://localhost:8090/iserver/services/map-china400/rest/maps/China";
+// url="http://localhost:8090/iserver/services/map-25DCity/rest/maps/SuperMap25D";
+// url="http://localhost:8090/iserver/services/map-tianditu/rest";
+// url="http://localhost:8090/iserver/services/map-ChinaProvinces/rest/maps/ChinaProvinces";
+// url="http://localhost:8090/iserver/services/map-baidu/rest/maps/normal";矢量中文注记_经纬度
+// url="http://localhost:8090/iserver/services/map-tianditu/rest/maps/矢量中文注记_经纬度";//天地圖
+//  url="http://localhost:8090/iserver/services/maps/rest/maps/World";
+function init(){ 
+	layer = new SuperMap.Layer.TiledDynamicRESTLayer("China", url, {transparent: true, cacheEnabled: true}, {maxResolution:"auto"});
+	layer.events.on({"layerInitialized":addLayer});
+	vectorLayer = new SuperMap.Layer.Vector("Vector Layer");
+	vectorLayer1 = new SuperMap.Layer.Vector("Vector Layer1");
+	markerLayer = new SuperMap.Layer.Markers("Markers");
+
+
+	//几何圆查询
+// 	drawPolygon1 = new SuperMap.Control.DrawFeature(vectorLayer, SuperMap.Handler.RegularPolygon,{handlerOptions:{sides:50}});
+// 	drawPolygon1.events.on({"featureadded": drawCompleted});
+	
+	map = new SuperMap.Map("map",{controls: [
+// 		new SuperMap.Control.LayerSwitcher(),
+		new SuperMap.Control.ScaleLine(),
+// 		new SuperMap.Control.Zoom(),
+		new SuperMap.Control.MousePosition(),
+		new SuperMap.Control.Navigation({
+			dragPanOptions: {
+				enableKinetic: true
+			}
+		}),
+// 		drawPolygon1
+		]
+	});
+}
+function addLayer(){
+	map.addLayer([layer]);
+	map.setCenter(new SuperMap.LonLat( 0,0), 0);
+}
+
+</script>
+</head>
+<body onload="init()">
+<!-- 	<div id="toolbar"> -->
+<!-- 		<input type="button" class="btn" value="圆" onclick="drawGeometry1()" /> -->
+<!-- 	</div> -->
+	<div id="map"></div>
+</body>
+</html>

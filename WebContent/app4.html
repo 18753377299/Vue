@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div id="app4">
+		<ul >
+			<li v-for="todo in todos">{{todo.ee}}</li>
+		</ul>
+	</div>
+</body>
+<script src="vue/2.4.2/vue.min.js" ></script>
+<script>
+ var app4= new Vue({
+		el:"#app4",
+		data:{
+			todos:[{ee:'aaa'},
+					{ee:'bb'},
+					{ee:'cccccc'}
+		]
+		}
+	  })
+ app4.todos.push({ee:'eeee'});
+</script>
+</html>

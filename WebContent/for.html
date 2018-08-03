@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<!--  	<ul id="exemple_1"> -->
+<!--  		<li v-for="(item,index) in items"> -->
+<!--  			{{parentMessage}}-{{index}}-{{item.aa}} -->
+<!--  		</li> -->
+<!--  	</ul> -->
+ 	<ul id="example_2">
+ 		<li v-for="value in object">{{value}}</li>
+ 	</ul>
+</body>
+<script src="vue/2.4.2/vue.min.js" ></script>
+<script>	
+//     new Vue({
+// 		el:"#exemple_1",
+// 		data:{
+// 			parentMessage:'parent',
+// 			items:[{aa:'aaaaa'},{aa:'bbbb'},{aa:'ccccc'}]
+// 			}
+//         })  
+ new Vue({
+		el:"#example_2",
+		data:{
+			object:{aa:'aaaaa',bb:'bbbb',cc:'ccccc'}
+			}
+        })  
+</script>
+</html>

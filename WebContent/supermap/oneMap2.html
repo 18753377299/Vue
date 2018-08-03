@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>墨卡托投影系地图</title>
+<style type="text/css">
+body{
+margin: 0;
+overflow: hidden;
+background: #fff;
+}
+#map{
+position: relative;
+height: 553px;
+border:1px solid #3473b7;
+}
+</style>
+<script src = '../libs/SuperMap.Include.js'></script>
+<script type="text/javascript">
+var map, layer,drawPolygon1,drawPoint,vectorLayer1,markerLayer
+	style = {
+		strokeColor: "#304DBE",
+		strokeWidth: 1,
+		pointerEvents: "visiblePainted",
+		fillColor: "#304DBE",
+		fillOpacity: 0.5
+	},
+// host = document.location.toString().match(/file:\/\//) ? "http://localhost:8090" : 'http://' + document.location.host;
+// url = host + "/iserver/services/map-china400/rest/maps/China";
+
+// url="http://localhost:8090/iserver/services/map-china400/rest/maps/China";
+// url="http://localhost:8090/iserver/services/map-world/rest/maps/World";
+// url="http://localhost:8090/iserver/services/map-ChinaProvinces2/rest/maps/vec@t0.tianditu.com_WMTS";
+// url="http://localhost:8090/iserver/services/map-ChinaProvinces2/rest/maps/MapGrid_Ge@China";
+url="http://localhost:8090/iserver/services/map-ChinaProvinces2/rest/maps/vec@t0.tianditu.com_WMTS1";
+// url="http://localhost:8090/iserver/services/map-supermap_oracle_lqk2/rest/maps/RISKMAP_DISASTER2_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL";
+// url="http://localhost:8090/iserver/services/map-supermap_oracle_lqk2/rest/maps/riskmap_1";
+function init(){
+	//初始化图层
+	layer = new SuperMap.Layer.TiledDynamicRESTLayer("vec@t0.tianditu.com_WMTS1 ", url, null,{maxResolution:"auto"});
+// 	layer = new SuperMap.Layer.TiledDynamicRESTLayer("RISKMAP_DISASTER2_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL", url, null,{maxResolution:"auto"});
+	
+	//监听图层信息加载完成事件
+	layer.events.on({"layerInitialized":addLayer});
+
+	vectorLayer = new SuperMap.Layer.Vector("Vector Layer");
+	vectorLayer1 = new SuperMap.Layer.Vector("Vector Layer1");
+	markerLayer = new SuperMap.Layer.Markers("Markers");
+
+	//几何圆查询Polygon，RegularPolygon
+	drawPolygon1 = new SuperMap.Control.DrawFeature(vectorLayer, SuperMap.Handler.RegularPolygon,{handlerOptions:{sides:50}});
+	drawPoint=new SuperMap.Control.DrawFeature(vectorLayer, SuperMap.Handler.Point);
+	
+	//初始化地图
+	map = new SuperMap.Map("map",{controls:[
+		new SuperMap.Control.Navigation() ,
+		new SuperMap.Control.ScaleLine(),
+		new SuperMap.Control.MousePosition(),
+		 new SuperMap.Control.PanZoomBar(),
+// 		new SuperMap.Control.Zoom(),
+		drawPolygon1,drawPoint
+	]});
+	map.addControl(new SuperMap.Control.MousePosition());
+
+	drawPolygon1.events.on({"featureadded": drawCompleted});
+	drawPoint.events.on({'featureadded': drawCompletedPoint});
+	
+}
+//异步加载图层
+function addLayer(){
+	map.addLayers([layer, vectorLayer, vectorLayer1, markerLayer]);
+	//显示地图范围
+// 	map.setCenter(new SuperMap.LonLat(104.09,30.58), 1);
+	
+	map.setCenter(new SuperMap.LonLat(122.88 , 29.5), 1);
+}
+
+function clearStatus(){
+	vectorLayer.removeAllFeatures();
+	vectorLayer1.removeAllFeatures();
+	markerLayer.clearMarkers();
+}
+
+function drawGeometry1(){
+	//先清除上次的显示结果
+	clearStatus();
+	drawPolygon1.activate(); 
+}
+
+function drawGeometry3(){
+	clearStatus();
+	drawPoint.activate();
+}
+
+function drawCompletedPoint(evt){
+// 	console.log(evt);
+	drawPoint.deactivate();
+	if(evt.feature.geometry){
+		console.log("x="+evt.feature.geometry.x+" ;y="+evt.feature.geometry.y);
+	}
+	
+	
+}
+
+function drawCompleted(drawGeometryArgs) {
+    if(drawGeometryArgs){
+    	var feature = new SuperMap.Feature.Vector();
+    	feature.geometry = drawGeometryArgs.feature.geometry,
+    	feature.style = style;
+    	vectorLayer.addFeatures(feature);
+    	console.log(drawGeometryArgs.feature.geometry.bounds);
+    	
+    	for(var i=0;i<4;i++){
+    		var point=drawGeometryArgs.feature.geometry.bounds;
+    		var size = new SuperMap.Size(44, 33),
+            offset = new SuperMap.Pixel(-(size.w/2), -size.h),
+            icon = new SuperMap.Icon("../theme/images/marker.png", size, offset);
+    		 markerLayer.addMarker(new SuperMap.Marker(new SuperMap.LonLat((point.left+point.right)/2+i*0.1, (point.bottom+point.top)/2+i*0.1), icon));
+        }
+    	 
+     }
+     drawPolygon1.deactivate();
+}
+function clearFeatures() {
+	vectorLayer.removeAllFeatures();
+	vectorLayer1.removeAllFeatures();
+	markerLayer.clearMarkers();
+}
+
+</script>
+</head>
+<body onLoad = "init()">
+	<div id="toolbar">
+	<input type="button" class="btn" value="点" onclick="drawGeometry3()" />
+		<input type="button" class="btn" value="圆" onclick="drawGeometry1()" />
+		<input type="button" class="btn" value="清除" onclick="clearFeatures()" />
+	</div>
+	<div id = "map"></div>
+</body>
+</html>

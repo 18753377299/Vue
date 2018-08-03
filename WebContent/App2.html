@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div id='app2'>
+		<span v-bind:title="messge">ddddd</span>
+	</div>
+</body>
+<script src="vue/2.4.2/vue.min.js" ></script>
+<script>
+  new Vue({
+		el:"#app2",
+		data:{
+			message:'cccc'+new Data()
+			}
+	  })
+</script>
+</html>

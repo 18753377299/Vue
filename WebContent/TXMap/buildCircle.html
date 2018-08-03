@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>向地图上添加一个圆</title>
+<style type="text/css">
+*{
+    margin:0px;
+    padding:0px;
+}
+body, button, input, select, textarea {
+    font: 12px/16px Verdana, Helvetica, Arial, sans-serif;
+}
+#info{
+    width:603px;
+    padding-top:3px;
+    overflow:hidden;
+}
+.btn{
+    width:190px;
+}
+#container{
+	min-width:600px;
+	min-height:767px;
+}
+</style>
+<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
+<script>
+function init(){
+    var center=new qq.maps.LatLng(39.982163,116.306070);
+    var map=new qq.maps.Map(document.getElementById("container"),{
+        center:center,
+        zoom:14
+    });
+    var circle=new qq.maps.Circle({
+        map:map,
+        center:center,
+        radius:1000,
+        //red、green、blue的取值范围都是[0,255]。alpha参数取值范围为[0,1]，0是完全透明，1是完全不透明
+        fillColor:new qq.maps.Color(255,51,51,0.1),
+        strokeWeight:2,
+        strokeColor : "#F33", // 线颜色
+    });
+//     Color(red:Number, green:Number, blue:Number, alpha?:Number)
+    //setMap
+    var mapM=document.getElementById("mapM");
+    qq.maps.event.addDomListener(mapM,"click",function(){
+        circle.setVisible(true);
+        if(circle.getMap()){
+            circle.setMap(null);
+        }else{
+            circle.setMap(map);
+        }
+    });
+    //setCursor
+    var curF=true;
+    var cursor=document.getElementById("cursor");
+    qq.maps.event.addDomListener(cursor,"click",function(){
+        circle.setMap(map);
+        circle.setVisible(true);
+        if(curF){
+            curF=false;
+            circle.setCursor("default");
+        }else{
+            curF=true;
+            circle.setCursor("pointer");
+        }
+    });
+    //setFillColor
+    var fillCF=true;
+    var fillC=document.getElementById("fillC");
+    qq.maps.event.addDomListener(fillC,"click",function(){
+        circle.setMap(map);
+        circle.setVisible(true);
+        if(fillCF){
+            fillCF=false;
+            circle.setFillColor("#0f0");
+        }else{
+            fillCF=true;
+            circle.setFillColor("#111");
+        }
+    });
+    //setRadius
+    var pathF=true;
+    var path=document.getElementById("path");
+    qq.maps.event.addDomListener(path,"click",function(){
+        circle.setMap(map);
+        circle.setVisible(true);
+        if(pathF){
+            pathF=false;
+            circle.setRadius(500);
+        }else{
+            pathF=true;
+            circle.setRadius(1000);
+        }
+    });
+    //setStrokeColor
+    var strokeCF=true;
+    var strokeC=document.getElementById("strokeC");
+    qq.maps.event.addDomListener(strokeC,"click",function(){
+        circle.setMap(map);
+        circle.setVisible(true);
+        if(strokeCF){
+            strokeCF=false;
+            circle.setStrokeColor("#1c29d8");
+        }else{
+            strokeCF=true;
+            circle.setStrokeColor("#000");
+        }
+    });
+    //setStrokeDashStyle
+    var dashF=true;
+    var dash=document.getElementById("dash");
+    qq.maps.event.addDomListener(dash,"click",function(){
+        circle.setMap(map);
+        circle.setVisible(true);
+        if(dashF){
+            dashF=false;
+            circle.setStrokeDashStyle("dash");
+        }else{
+            dashF=true;
+            circle.setStrokeDashStyle("solid");
+        }
+    });
+    //setStrokeWeight
+    var strokeWeightF=true;
+    var strokeWeight=document.getElementById("strokeWeight");
+    qq.maps.event.addDomListener(strokeWeight,"click",function(){
+        circle.setMap(map);
+        circle.setVisible(true);
+        if(strokeWeightF){
+            strokeWeightF=false;
+            circle.setStrokeWeight(10);
+        }else{
+            strokeWeightF=true;
+            circle.setStrokeWeight(5);
+        }
+    });
+    //setVisible
+    var visibleTF=true;
+    var visibleT=document.getElementById("visibleT");
+    qq.maps.event.addDomListener(visibleT,"click",function(){
+        circle.setMap(map);
+        if(visibleTF){
+            visibleTF=false;
+            circle.setVisible(false);
+        }else{
+            visibleTF=true;
+            circle.setVisible(true);
+        }
+    });
+}
+window.onload=init;
+</script>
+</head>
+<body onload="init()">
+<div id="container"></div>
+<div id="info">
+    <button id="mapM" class="btn">setMap</button>
+    <button id="cursor" class="btn">setCursor</button>
+    <button id="fillC" class="btn">setFillColor</button>
+    <button id="path" class="btn">setRadius</button>
+    <button id="strokeC" class="btn">setStrokeColor</button>
+    <button id="dash" class="btn">setStrokeDashStyle</button>
+    <button id="strokeWeight" class="btn">setStrokeWeight</button>
+    <button id="visibleT" class="btn">setVisible</button>
+</div>
+</body>
+</html>

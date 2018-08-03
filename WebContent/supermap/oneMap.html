@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>oneMap</title>
+<style type="text/css">
+body{
+	margin: 0;
+	overflow: hidden;
+	background: #fff;
+}
+#map{
+	position: relative;
+	height: 553px;
+	border:1px solid #3473b7;
+}
+</style>
+<script src = '../jquery/jquery.min.js'></script>
+<script src = '../libs/SuperMap.Include.js'></script>
+<script type="text/javascript">
+var map, layer,drawPolygon1,drawPoint,vectorLayer1,markerLayer,framedCloud,modifyLayer,
+    pointArray=[["117.190182","39.125596"],
+                ["114.502461","38.045474"],
+                ["112.549248","37.857014"]],
+	style = {
+		strokeColor: "#304DBE",
+		strokeWidth: 1,
+		pointerEvents: "visiblePainted",
+		fillColor: "#304DBE",
+		fillOpacity: 0.5
+	},
+// host = document.location.toString().match(/file:\/\//) ? "http://localhost:8090" : 'http://' + document.location.host;
+// url = host + "/iserver/services/map-china400/rest/maps/China";
+
+// url="http://localhost:8090/iserver/services/map-china400/rest/maps/China";
+// url="http://localhost:8090/iserver/services/map-world/rest/maps/World";
+// url="http://localhost:8090/iserver/services/map-ChinaProvinces2/rest/maps/vec@t0.tianditu.com_WMTS";
+// url="http://localhost:8090/iserver/services/map-ChinaProvinces2/rest/maps/MapGrid_Ge@China";
+
+// url="http://localhost:8090/iserver/services/map-ChinaProvinces2/rest/maps/vec@t0.tianditu.com_WMTS1";
+// url="http://localhost:8090/iserver/services/map-ChinaProvinces2/rest/maps/BuildRegion_2J@China";
+
+   url3="http://10.10.1.156:8099/iserver/services/map-ChinaProvinces/rest/maps/ChinaProvinces",
+//    url="http://10.10.1.156:8099/iserver/services/map-china400/rest/maps/China_4326";
+   
+    url = "http://localhost:8090/iserver/services/map-supermap_oracle_lqk3/rest/maps/Countries@World_2";
+// url="http://localhost:8090/iserver/services/map-BaoYu2/rest/maps/vec@t0.tianditu.com_WMTS1";
+//    url="http://localhost:8090/iserver/services/map-BaoYu22/rest/maps/rain_daily_10a_test@a";
+function init(){
+	//初始化图层
+	//定义layer图层，获取图层服务地址 vec@t0.tianditu.com_WMTS1
+// 	layer = new SuperMap.Layer.TiledDynamicRESTLayer("vec@t0.tianditu.com_WMTS1", url, null,{maxResolution:"auto"});
+	layer = new SuperMap.Layer.TiledDynamicRESTLayer("Countries@World_2", url, null,{maxResolution:"auto"});
+// 	modifyLayer=  new SuperMap.Layer.TiledDynamicRESTLayer("ChinaProvinces", url3, null,{maxResolution:"auto"});
+	//监听图层信息加载完成事件
+	layer.events.on({"layerInitialized":addLayer});
+// 	modifyLayer.events.on({"layerInitialized":addLayer1});
+
+	vectorLayer = new SuperMap.Layer.Vector("Vector Layer");
+	vectorLayer1 = new SuperMap.Layer.Vector("Vector Layer1");
+	//初始化标记图层类
+	markerLayer = new SuperMap.Layer.Markers("Markers");
+	markerLayer1 = new SuperMap.Layer.Markers("Markers1");
+
+	//几何圆查询Polygon，RegularPolygon
+	drawPolygon1 = new SuperMap.Control.DrawFeature(vectorLayer, SuperMap.Handler.RegularPolygon,{handlerOptions:{sides:50}});
+	drawPoint=new SuperMap.Control.DrawFeature(vectorLayer, SuperMap.Handler.Point);
+	
+	//初始化地图
+	map = new SuperMap.Map("map",{controls:[
+		new SuperMap.Control.Navigation() ,
+		new SuperMap.Control.MousePosition(),
+		new SuperMap.Control.Zoom(),
+		drawPolygon1,drawPoint
+	]});
+	map.addControl(new SuperMap.Control.MousePosition());
+
+	drawPolygon1.events.on({"featureadded": drawCompleted});
+	drawPoint.events.on({'featureadded': drawCompletedPoint});
+
+	map.events.on({"click":mapmouseclick});
+}
+function switchBaseMap(){
+	 console.log(this.map.getLayerIndex(this.layer))
+	 this.map.removeLayer(this.layer)
+// 	 this.map.setLayerIndex(this.layer,1)
+	 modifyLayer=  new SuperMap.Layer.TiledDynamicRESTLayer("ChinaProvinces", url3, null,{maxResolution:"auto"});
+	 modifyLayer.events.on({"layerInitialized":addLayer1});
+     this.map.setBaseLayer(this.modifyLayer)
+     this.map.setLayerIndex(this.modifyLayer,0)
+//      layer.events.on({"layerInitialized":addLayer1});
+}
+function addLayer1(){
+	map.addLayers([modifyLayer]);
+	//显示地图范围
+// 	map.setCenter(new SuperMap.LonLat(104.09,30.58), 1);
+	map.setCenter(new SuperMap.LonLat(104.34 , 36.1), 1);
+}
+// 绘制实时台风
+function drawDraw(){
+	LSLJ_DrawPath(0, 0); 
+}
+function LSLJ_DrawPath(xh,pathxh){
+//     var tb	="/Vue/WebContent/supermap/scripts/pot_8.png";
+	var tb	="scripts/pot_8.png";
+	var PathInfo=pointArray[xh];
+	var lonlat = new SuperMap.LonLat(PathInfo[0], PathInfo[1]);
+	
+	var size = new SuperMap.Size(16, 16);
+    var offset = new SuperMap.Pixel(-8, -8);
+    var myIcon = new SuperMap.Icon(tb, size, offset);
+    var Marker = new SuperMap.Marker(lonlat, myIcon);
+    Marker.Data = PathInfo;
+	TFLJ_DrawFQ(lonlat);
+	if (xh == 0) {
+		var txt = "aaaa";
+		var x0 = lonlat.lon;
+		var y0 = lonlat.lat;
+		var geoText = new SuperMap.Geometry.GeoText(x0, y0, txt);
+		var geotextFeature = new SuperMap.Feature.Vector(geoText);
+		vectorLayer.addFeatures([geotextFeature]);
+		// LSZH_AdLegend(6);
+	}
+	if (xh > 0) {
+        var B_PathInfo = pointArray[xh-1];
+        var B_lonlat = new SuperMap.Geometry.Point(B_PathInfo[0], B_PathInfo[1]);
+        var A_lonlat = new SuperMap.Geometry.Point(lonlat.lon, lonlat.lat);
+        var polypoint_1 = [B_lonlat, A_lonlat];
+        var polyline_1 = new SuperMap.Geometry.LineString(polypoint_1);
+        var line1Vector = new SuperMap.Feature.Vector(polyline_1);
+        line1Vector.style = {
+            strokeColor: "#A2B0CC",
+            strokeWidth: 2
+        };
+        vectorLayer.addFeatures([line1Vector]);
+    }
+	markerLayer.addMarker(Marker);
+	
+	if (xh < pointArray.length - 1) {
+        setTimeout(function () { LSLJ_DrawPath(xh + 1, pathxh) }, 1000);
+//         setTimeout(LSLJ_DrawPath(xh + 1, pathxh), 1000);
+    }
+}
+//绘制台风动画
+function TFLJ_DrawFQ(lonlat) {
+    // LSTF_DHLayer.clearMarkers();
+    markerLayer1.clearMarkers();
+    var size = new SuperMap.Size(40, 40);
+    var offset = new SuperMap.Pixel(-20, -20);
+// 	var icon="/Vue/WebContent/supermap/scripts/tf_fy.gif";
+	var icon="scripts/tf_fy.gif";
+    var dhIcon = new SuperMap.Icon(icon, size, offset);
+    var dhMarker = new SuperMap.Marker(lonlat, dhIcon);
+    markerLayer1.addMarker(dhMarker);
+}
+function mapmouseclick(e){
+// 	console.log(e);
+	var point=new SuperMap.Pixel(e.xy.x,e.xy.y);
+	var geopoint=map.getLonLatFromPixel(point);
+	alert("geopoint:"+geopoint);
+}
+//异步加载图层
+function addLayer(){
+	map.addLayers([layer, vectorLayer, vectorLayer1, markerLayer,markerLayer1]);
+	//显示地图范围
+// 	map.setCenter(new SuperMap.LonLat(104.09,30.58), 1);
+	map.setCenter(new SuperMap.LonLat(104.34 , 36.1), 1);
+}
+
+function clearStatus(){
+	vectorLayer.removeAllFeatures();
+	vectorLayer1.removeAllFeatures();
+	markerLayer.clearMarkers();
+}
+
+function drawGeometry1(){
+	//先清除上次的显示结果
+	clearStatus();
+	drawPolygon1.activate(); 
+}
+
+function drawGeometry3(){
+	clearStatus();
+	drawPoint.activate();
+}
+
+function drawCompletedPoint(drawGeometryArgs){
+	debugger;
+	console.log(drawGeometryArgs);
+	drawPoint.deactivate();
+	if(drawGeometryArgs.feature.geometry){
+		console.log("x="+drawGeometryArgs.feature.geometry.x+" ;y="+drawGeometryArgs.feature.geometry.y);
+	}
+	var lon=drawGeometryArgs.feature.geometry.x;
+	var lat=drawGeometryArgs.feature.geometry.y;
+
+	$.ajax({
+		url : "http://supermapiserver:8090/iserver/services/data-world/rest/data/datasources/World/datasets/LandCover/gridValue.rjson?x=113&y=31",
+		type : 'get',
+		async : false,
+		contentType : 'application/json;charset=utf-8',
+		data : '',
+		dataType : 'json',
+		success : function(data, textStatus, jqXHR) {
+			var resultData = null;
+			console.log("data:"+data);
+		},
+		// 失败：回调
+		error : function(xhr, textStatus) {
+			alert('连接异常！');
+		}
+	});
+	
+	
+	var feature = new SuperMap.Feature.Vector();
+	feature.geometry = drawGeometryArgs.feature.geometry,
+	feature.style = style;
+	vectorLayer.addFeatures(feature);
+
+	var queryParam, queryByGeometryParameters, queryService;
+// 	VectorizeResult_1@bbb.1@@VectorizeResult_1@bbb
+//  rain_daily_10a_test@a@@rain_daily_10a_test@a 
+// 	queryParam = new SuperMap.REST.FilterParameter({name: "VectorizeResult_1@bbb.1"});
+	queryParam = new SuperMap.REST.FilterParameter({
+						name: "rain_daily_10a_test@a"
+				});
+	queryByGeometryParameters = new SuperMap.REST.QueryByGeometryParameters({
+	queryParams: [queryParam],
+	geometry: drawGeometryArgs.feature.geometry,
+	spatialQueryMode: SuperMap.REST.SpatialQueryMode.INTERSECT
+	});
+	queryService = new SuperMap.REST.QueryByGeometryService(url, {
+	eventListeners: {
+	"processCompleted": processCompleted,
+	"processFailed": processFailed
+	}
+	});
+	queryService.processAsync(queryByGeometryParameters);
+	
+	
+}
+
+function drawCompleted(drawGeometryArgs) {
+	console.log(drawGeometryArgs);
+    if(drawGeometryArgs){
+    	var feature = new SuperMap.Feature.Vector();
+    	feature.geometry = drawGeometryArgs.feature.geometry,
+    	feature.style = style;
+    	vectorLayer.addFeatures(feature);
+//     	console.log(drawGeometryArgs.feature.geometry.bounds);
+    	
+    	for(var i=0;i<4;i++){
+    		var point=drawGeometryArgs.feature.geometry.bounds;
+    		var size = new SuperMap.Size(44, 33),
+            offset = new SuperMap.Pixel(-(size.w/2), -size.h),
+            icon = new SuperMap.Icon("../theme/images/marker.png", size, offset);
+    		var marker=new SuperMap.Marker(new SuperMap.LonLat((point.left+point.right)/2+i*0.1, (point.bottom+point.top)/2+i*0.1), icon);
+    		
+//     		markerLayer.addMarker(new SuperMap.Marker(new SuperMap.LonLat((point.left+point.right)/2+i*0.1, (point.bottom+point.top)/2+i*0.1), icon));
+
+    		marker.events.on({"click":mouseClickHandler,
+    			"touchstart":mouseClickHandler //假如要在移动端的浏览器也实现点击弹框，则在注册touch类事件
+    		});
+    		markerLayer.addMarker(marker); 			
+    	}
+
+    	var queryParam, queryByGeometryParameters, queryService;
+    	queryParam = new SuperMap.REST.FilterParameter({
+//     		BuildRegion_2J@China@@BuildRegion_2J@China
+//         	name: "Capitals@World.1"
+			name: "BuildRegion_2J@China"
+            	});
+    	queryByGeometryParameters = new SuperMap.REST.QueryByGeometryParameters({
+	    	queryParams: [queryParam],
+	    	geometry: drawGeometryArgs.feature.geometry,
+	    	spatialQueryMode: SuperMap.REST.SpatialQueryMode.INTERSECT
+    	});
+    	queryService = new SuperMap.REST.QueryByGeometryService(url, {
+	    	eventListeners: {
+		    	"processCompleted": processCompleted,
+		    	"processFailed": processFailed
+	    	}
+    	});
+    	queryService.processAsync(queryByGeometryParameters);
+    	 
+    }
+    drawPolygon1.deactivate();
+}
+function processCompleted(queryEventArgs){
+	console.log(queryEventArgs);
+}
+function processFailed(e){
+	alert(e.error.errorMsg);
+}
+
+var infowin = null;
+//定义mouseClickHandler函数，触发click事件会调用此函数
+function mouseClickHandler(event){
+	closeInfoWin();
+	
+	var contentHTML = "<div style='width:80px; font-size:12px;font-weight:bold ; opacity: 0.8'>"; 
+	contentHTML += "伦敦贝克街221号B";
+	contentHTML += "</div>"; 
+
+	var size = new SuperMap.Size(28, 24),
+    offset = new SuperMap.Pixel(-(size.w/2), -size.h),
+    icon = new SuperMap.Icon("../theme/images/marker.png", size, offset);
+    
+	//初始化FramedCloud类
+	framedCloud = new SuperMap.Popup.FramedCloud(
+		"chicken", 
+// 		marker.getLonLat(),
+		event.object.lonlat,
+		null,
+		contentHTML,
+		icon,
+		true,
+		null,
+		true
+	);
+	//初始化popup类
+// 	framedCloud = new SuperMap.Popup(
+// 		"chicken",
+// 		event.object.lonlat,
+// 		new SuperMap.Size(220,140),
+// 		'<img src="images/xila.jpg">',
+// 		true,
+// 		null
+// 	);
+	
+	//初始化Anchored类
+// 	framedCloud = new SuperMap.Popup.Anchored(
+// 		"chicken",
+// // 		marker.getLonLat(),
+// 		event.object.lonlat,
+// 		new SuperMap.Size(220,140),
+// 		'<img src="images/xila.jpg">',
+// 		icon,
+// 		true,
+// 		null
+// 	);
+	
+	infowin = framedCloud;
+	map.addPopup(framedCloud);
+}
+function closeInfoWin(){
+	if(infowin){
+		try{
+			infowin.hide();
+			infowin.destroy();
+		}
+		catch(e){}
+	}
+}
+
+function clearFeatures() {
+	vectorLayer.removeAllFeatures();
+	vectorLayer1.removeAllFeatures();
+	markerLayer.clearMarkers();
+	//移除指定的信息窗口
+	map.removePopup(infowin);
+}
+
+</script>
+</head>
+<body onLoad = "init()">
+	<div id="toolbar">
+<!-- 	    实时台风 -->
+		<input type="button" class="btn" value="start" onclick="drawDraw()" />
+<!-- 		<img src="scripts/pot_8.png" style="width:100px;height:100px;"/> -->
+		<input type="button" class="btn" value="点" onclick="drawGeometry3()" />
+		<input type="button" class="btn" value="圆" onclick="drawGeometry1()" />
+		<input type="button" class="btn" value="切换底图" onclick="switchBaseMap()"/>
+		<input type="button" class="btn" value="清除" onclick="clearFeatures()" />
+	</div>
+	<div id = "map"></div>
+</body>
+</html>

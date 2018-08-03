@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="keywords" content="天地图"/>
+    <title>天地图－地图API－范例－简单右键菜单</title>
+    <script type="text/javascript" src="http://api.tianditu.com/api?v=4.0"></script>
+    <style type="text/css">body,html{width:100%;height:100%;margin:0;font-family:"Microsoft YaHei"}#mapDiv{width:100%;height:400px}input,b,p{margin-left:5px;font-size:14px}</style>
+    <script>
+        var map;
+        var zoom = 12;
+        function onLoad() {
+            map = new T.Map('mapDiv');
+            map.centerAndZoom(new T.LngLat(116.40769, 39.89945), zoom);
+            var Menu = new T.ContextMenu({
+                width: 50
+            });
+
+            var _MenuItem2 = new T.MenuItem("放大", zoomIn);
+            Menu.addItem(_MenuItem2);
+            var _MenuItem3 = new T.MenuItem("缩小", zoomOut);
+            Menu.addItem(_MenuItem3);
+            map.addContextMenu(Menu);
+        }
+
+        function zoomIn(e) {
+            map.zoomIn();
+        }
+
+        function zoomOut(lnglat) {
+            map.zoomOut();
+        }
+    </script>
+</head>
+<body onLoad="onLoad()">
+<div id="mapDiv" ></div>
+<p>本示例演示如何向地图添加简单右键菜单。</p>
+</body>
+</html>

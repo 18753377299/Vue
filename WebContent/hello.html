@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+</head>
+<body>
+ 	<div id="app">
+<!--  		{{ message }} -->
+	<!-- 使用 v-html 指令用于输出 html 代码：	 -->
+  		<div v-html="message"></div>
+ 	</div> 
+ 	
+</body>
+<script src="vue/2.4.2/vue.min.js" ></script>
+<script>	
+
+var exampleData={
+    	message:"<h1> hello world2! </h1>"
+        }
+        
+    new Vue({
+		el:"#app",
+		data:exampleData
+        })
+
+    
+</script>
+</html>

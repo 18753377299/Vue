@@ -1,0 +1,115 @@
+<!DOCTYPE>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>地物编辑</title>
+<style type="text/css">
+body{
+margin: 0;
+overflow: hidden;
+background: #fff;
+}
+#map{
+position: relative;
+height: 510px;
+border:1px solid #3473b7;
+}
+#toolbar {
+position: relative;
+padding-top: 5px;
+padding-bottom: 10px;
+}
+</style>
+<link href='./css/bootstrap.min.css' rel='stylesheet' />
+<link href='./css/bootstrap-responsive.min.css' rel='stylesheet' />
+<script src='../libs/SuperMap.Include.js'></script>
+<script type="text/javascript">
+        var host = document.location.toString().match(/file:\/\//) ? "http://localhost:8090" : 'http://' + document.location.host;
+        var map, local, layer, vectorLayer, drawPoint, drawPolygon, dataUrl, ids, modifyFeature,
+//             url1 = host + "/iserver/services/map-jingjin/rest/maps/京津地区土地利用现状图",
+//             url2 = host + "/iserver/services/data-jingjin/rest/data/datasources/name/Jingjin/datasets/name/BaseMap_P/";
+        	url1="http://localhost:8090/iserver/services/map-supermap_oracle_lqk2/rest/maps/riskmap_1",
+        	url2="http://localhost:8090/iserver/services/data-supermap_oracle_lqk2/rest/data/datasources/name/SUPERMAP_ORACLE_FOREVER_RISKCONTROL/datasets/name/RISKMAP_DISASTER_1/";
+        	
+//         	url1="http://localhost:8090/iserver/services/map-supermap_oracle_lqk/rest/maps/Countries@World",
+//         	// url2="http://localhost:8090/iserver/services/data-supermap_oracle_lqk/rest/data/datasources/World/datasets/Countries/",
+//         	url2="http://localhost:8090/iserver/services/data-supermap_oracle_lqk/rest/data/datasources/SUPERMAP_ORACLE_FOREVER_RISKCONTROL/datasets/RISKMAP_DISASTER2_1",
+//         	url3="http://localhost:8090/iserver/services/data-supermap_oracle_lqk/rest/data/";
+
+        	
+        function init() {
+            layer = new SuperMap.Layer.TiledDynamicRESTLayer("京津", url1, { transparent: true, cacheEnabled: false }, { maxResolution: "auto", bufferImgCount: 0 }); 
+            layer.events.on({ "layerInitialized": addLayer });
+            vectorLayer = new SuperMap.Layer.Vector("Vector Layer");
+            drawPoint = new SuperMap.Control.DrawFeature(vectorLayer, SuperMap.Handler.Point);
+            drawPoint.events.on({ "featureadded": addFeatureCompleted });
+            map = new SuperMap.Map("map", {controls: [drawPoint]});
+        }
+
+        function addLayer() {
+            map.addLayers([layer, vectorLayer]);
+            map.setCenter(new SuperMap.LonLat(117, 40), 0);
+        }
+        //激活添加地物
+        function activateAddFeature() {
+            drawPoint.activate();
+        }
+        //执行添加地物
+        function addFeatureCompleted(drawGeometryArgs) {
+        	console.log(drawGeometryArgs);
+        	
+            drawPoint.deactivate();
+            var geometry = drawGeometryArgs.feature.geometry,
+            feature = new SuperMap.Feature.Vector();
+            feature.geometry = drawGeometryArgs.feature.geometry,
+            vectorLayer.addFeatures(feature);
+            geometry.id = "100000";
+            var editFeatureParameter,
+                editFeatureService,
+                features = {
+                    fieldNames: [],
+                    fieldValues: [],
+                    geometry: geometry
+                };
+            editFeatureParameter = new SuperMap.REST.EditFeaturesParameters({
+                features: [features],
+                editType: SuperMap.REST.EditType.ADD,
+                returnContent: false
+            });
+            editFeatureService = new SuperMap.REST.EditFeaturesService(url2, {
+                eventListeners: {
+                    "processCompleted": addFeaturesProcessCompleted,
+                    "processFailed": processFailed
+                }
+            });
+            editFeatureService.processAsync(editFeatureParameter);
+        }
+        //添加地物成功
+        function addFeaturesProcessCompleted(editFeaturesEventArgs) {
+            var addResultIds = editFeaturesEventArgs.result.IDs,
+                resourceInfo = editFeaturesEventArgs.result.resourceInfo;
+            if (addResultIds === null && resourceInfo === null) return;
+            if ((addResultIds && addResultIds.length > 0) || (resourceInfo && resourceInfo.succeed)) {
+                alert("新增地物成功");
+                //重新加载图层
+                layer.redraw();
+            } else {
+                alert("新增地物失败");
+            }
+        }
+        function processFailed(e) {
+            alert(e.error.errorMsg);
+        }
+
+    </script>
+</head>
+<body onload="init()">
+<div id="toolbar">
+<input type="button" class="btn" value="新增地物" onclick="activateAddFeature()" />
+<input type="button" class="btn" value="选择地物" onclick="activateSelectedFeature()" />
+<input type="button" class="btn" value="编辑地物" onclick="editselectedFeature()" />
+<input type="button" class="btn" value="删除地物" onclick="deleteSelectedFeature()" />
+</div>
+<div id="map"></div>
+</body>
+</html>

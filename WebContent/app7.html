@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div id="app7">
+<!-- 	 <ol>    Now we provide each todo-item with the todo object      -->
+<!-- 	   it's representing, so that its content can be dynamic  -->
+<!-- 	      <todoitem v-for="item in groceryList" v-bind:todo="item"></todoitem>   -->
+<!-- 	      </ol> -->
+		<ul>
+		   <todoitem v-for="item in items" v-bind:todo="item"></todoitem>
+		</ul>
+	</div>
+</body>
+<script src="vue/2.4.2/vue.min.js" ></script>
+<script>
+Vue.component("todoitem",{
+	props:['todo'],
+	template:"<li>{{todo.text}}</li>"
+})
+	new Vue({
+		el:"#app7",
+		data:{
+			items:[
+					{text:"bbbb"},
+					{text:"cccc"}
+					]
+			}
+})
+// Vue.component('todoitem', {  
+// 	props: ['todo'],  
+// 	template: '<li>{{ todo.text }}</li>'
+// 		})
+// 		var app7 = new Vue({ 
+// 			 el: '#app7', 
+// 			  data: {    groceryList: [    
+// 			             			    { text: 'Vegetables' },   
+// 			             			       { text: 'Cheese' },     
+// 			             			        { text: 'Whatever else humans are supposed to eat' } 
+// 			             			           ]  
+//          }
+//         })
+
+</script>
+</html>

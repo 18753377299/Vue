@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+	<style>
+	.class1{
+	  background: #444;
+	  color: #eee;
+	}
+</style>
+<body>
+<!-- HTML 属性中的值应使用 v-bind 指令。 -->
+<!-- 以下实例判断 class1 的值，如果为 true 使用 class1 类的样式，否则不使用该类： -->
+	<div id="app">
+		<label for="r1">修改颜色</label><input type="checkbox" v-model="class1" id="r1">
+		<div v-bind:class="{'class1':class1}">
+			directiva v-bind:class
+<!-- 			<img src="http://11.205.242.60:8080/prprisk_zg_b/upload/TC00300000000201800283/1.1/1.1.1.jpg" style="width: auto;height: auto;max-width: 100%;max-height: 100%;" alt="" ref="myimg"> -->
+		</div>
+	</div>
+</body>
+<script src="vue/2.4.2/vue.min.js" ></script>
+<script>	
+// var exampleData={
+//     	message:"<h1> hello world2! </h1>"
+//         }
+        
+    new Vue({
+		el:"#app",
+		data:{
+			class1:false
+			}
+        })   
+</script>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+     <title>232323</title>
+
+<style type="text/css">
+/* body { */
+/* 	　　margin: 0; */
+/* 	　　overflow: hidden; */
+/* 	　　background: #fff; */
+/* } */
+
+/* #map { */
+/* 	　　position: relative; */
+/* 	　　padding: 20px; */
+/* 	　　height: 760px; */
+/* 	　　border: 1px solid #3473b7; */
+/* } */
+</style>
+
+<script src='../libs/SuperMap.Include.js'></script>
+<script type="text/javascript">
+var map, layer, 
+// url="http://localhost:8090/iserver/services/map-25DCity/rest/maps/SuperMap25D";
+// url="http://localhost:8090/iserver/services/map-china400/rest/maps/China";
+url="http://localhost:8090/iserver/services/maps/rest/maps/World";
+function init(){    
+    var panZoombar = new SuperMap.Control.PanZoomBar({
+        // 是否显示滑动条
+        showSlider : true,
+        // 滑动条的长度
+        sliderBarHeight : 255
+    });
+    
+    
+	map = new SuperMap.Map("map", {
+	    controls : [
+	        	    panZoombar, 
+	        	    new SuperMap.Control.ScaleLine(), 
+	        	    new SuperMap.Control.Navigation()],
+	    numZoomLevels : 16       //设定缩放级别
+	    
+	});
+	layer = new SuperMap.Layer.TiledDynamicRESTLayer("World", url, {transparent: true, cacheEnabled: true},{maxResolution:"auto"});
+	layer.events.on({"layerInitialized":addLayer});//图层加载完毕
+
+}
+function addLayer(){
+	map.addLayer(layer);
+	map.setCenter(new SuperMap.LonLat(0,0), 1);
+}
+function drawClick(){
+	console.log('drawClick');
+	map.events.on({"click": this.mapClicked});
+}
+function mapClicked(evt){
+	console.log('mapClicked');
+}
+
+</script>
+</head>
+<body onload="init()">
+	<div id="map" style="width:1000px;height:300px"></div>
+	<input type="button" class="btn" value="圆" onclick="drawClick()" />
+
+</body>
+</html>

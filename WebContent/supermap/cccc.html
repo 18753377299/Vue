@@ -1,0 +1,200 @@
+<!DOCTYPE>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>几何查询ccccc</title>
+<style type="text/css">
+/* body{ */
+/* margin: 0; */
+/* overflow: hidden; */
+/* background: #fff; */
+/* } */
+/* #map{ */
+/* position: relative; */
+/* height: 510px; */
+/* border:1px solid #3473b7; */
+/* } */
+/* #toolbar { */
+/* position: relative; */
+/* padding-top: 5px; */
+/* padding-bottom: 10px; */
+/* } */
+</style>
+
+<script src='../libs/SuperMap.Include.js'></script>
+<script type="text/javascript">
+var map, local, layer, vectorLayer, vectorLayer1, drawPolygon,
+	markerLayer,drawPoint, drawLine,drawPolygon1,
+style = {
+	strokeColor: "#304DBE",
+	strokeWidth: 1,
+	pointerEvents: "visiblePainted",
+	fillColor: "#304DBE",
+	fillOpacity: 0.5
+},
+// host = document.location.toString().match(/file:\/\//)?"http://localhost:8090":'http://' + document.location.host,
+// url=host+"/iserver/services/map-world/rest/maps/World";
+// url="http://localhost:8090/iserver/services/maps/rest/maps/World";
+// url="http://localhost:8090/iserver/services/map-china400/rest/maps/China";
+// url="http://localhost:8090/iserver/services/map-baidu/rest/maps/normal";
+   url="http://localhost:8090/iserver/services/map-world/rest/maps/World";
+function init(){
+	layer = new SuperMap.Layer.TiledDynamicRESTLayer("World", url, {transparent: true, cacheEnabled: true}, {maxResolution:"auto"});
+// 	supermap.layer.tianditu(url)  
+	layer.events.on({"layerInitialized":addLayer});
+	vectorLayer = new SuperMap.Layer.Vector("Vector Layer");
+	vectorLayer1 = new SuperMap.Layer.Vector("Vector Layer1");
+	markerLayer = new SuperMap.Layer.Markers("Markers");
+
+
+	//几何圆查询Polygon，RegularPolygon
+	drawPolygon1 = new SuperMap.Control.DrawFeature(vectorLayer, SuperMap.Handler.RegularPolygon,{handlerOptions:{sides:50}});
+	drawPoint=new SuperMap.Control.DrawFeature(vectorLayer, SuperMap.Handler.Point);
+	
+	map = new SuperMap.Map("map",{controls: [
+// 		new SuperMap.Control.LayerSwitcher(),
+		new SuperMap.Control.ScaleLine(),
+		new SuperMap.Control.Zoom(),
+		new SuperMap.Control.MousePosition(),
+		new SuperMap.Control.Navigation({
+			dragPanOptions: {
+				enableKinetic: true
+			}
+		}),
+		drawPolygon1,drawPoint
+		]
+	});
+	drawPolygon1.events.on({"featureadded": drawCompleted});
+	drawPoint.events.on({'featureadded': drawCompletedPoint});
+	//地图上的点击事件
+	map.events.on({"click":mapmouseclick});
+}
+//通过点击地图获取经纬度的方式(先获取像素，在转换为经纬度坐标)
+function mapmouseclick(e){
+	console.log(e);
+	var point=new SuperMap.Pixel(e.xy.x,e.xy.y);
+	var geopoint=map.getLonLatFromPixel(point);
+	console.log(geopoint);
+}
+
+function addLayer() {
+	map.addLayers([layer, vectorLayer, vectorLayer1, markerLayer]);
+	map.setCenter(new SuperMap.LonLat(116, 39), 3);
+}
+function clearStatus(){
+	vectorLayer.removeAllFeatures();
+	vectorLayer1.removeAllFeatures();
+	markerLayer.clearMarkers();
+}
+//画圆
+function drawGeometry1() {
+	//先清除上次的显示结果
+	clearStatus();
+	drawPolygon1.activate(); 
+}
+
+function drawGeometry3(){
+	clearStatus();
+	drawPoint.activate();
+}
+
+function drawCompletedPoint(evt){
+// 	console.log(evt);
+	drawPoint.deactivate();
+	if(evt.feature.geometry){
+		alert("x="+evt.feature.geometry.x+" ;y="+evt.feature.geometry.y);
+	}
+// 	drawPoint.removeAllFeatures();
+	
+	
+}
+
+function drawCompleted(drawGeometryArgs) {
+    if(drawGeometryArgs){
+    	var feature = new SuperMap.Feature.Vector();
+    	feature.geometry = drawGeometryArgs.feature.geometry,
+    	feature.style = style;
+    	vectorLayer.addFeatures(feature);
+     }
+     drawPolygon1.deactivate();
+}
+
+// 	var feature = new SuperMap.Feature.Vector();
+// 	feature.geometry = drawGeometryArgs.feature.geometry,
+// 	feature.style = style;
+// 	vectorLayer.addFeatures(feature);
+
+// 	var queryParam, queryByGeometryParameters, queryService;
+// 	queryParam = new SuperMap.REST.FilterParameter({name: "Capitals@World.1"});
+// 	queryByGeometryParameters = new SuperMap.REST.QueryByGeometryParameters({
+// 		queryParams: [queryParam],
+// 		geometry: drawGeometryArgs.feature.geometry,
+// 		spatialQueryMode: SuperMap.REST.SpatialQueryMode.INTERSECT
+// 	});
+	
+
+	
+// 	queryService = new SuperMap.REST.QueryByGeometryService(url, {
+// 		eventListeners: {
+// 		"processCompleted": processCompleted,
+// 		"processFailed": processFailed
+// 		}
+// 	});
+// 	queryService.processAsync(queryByGeometryParameters);
+// }
+
+function processCompleted1(queryEventArgs){
+	drawPolygon1.deactivate();
+	alert("aaaaaa");
+}
+
+function processCompleted(queryEventArgs) {
+	drawPolygon1.deactivate();
+	var i, j, result = queryEventArgs.result;
+	if (result && result.recordsets) {
+		for (i=0, recordsets=result.recordsets, len=recordsets.length; i<len; i++) {
+			if (recordsets[i].features) {
+				for (j=0; j<recordsets[i].features.length; j++) {
+					var feature = recordsets[i].features[j];
+					var point = feature.geometry;
+					if(point.CLASS_NAME == SuperMap.Geometry.Point.prototype.CLASS_NAME){		
+						var size = new SuperMap.Size(44, 33),
+						offset = new SuperMap.Pixel(-(size.w/2), -size.h),						
+// 						icon = new SuperMap.Icon("../theme/images/marker.png", size, offset);
+						icon = new SuperMap.Icon("../theme/images/marker-gold.png", size, offset);
+						markerLayer.addMarker(new SuperMap.Marker(new SuperMap.LonLat(point.x, point.y), icon));
+					}else{
+						feature.style = style;
+						vectorLayer1.addFeatures(feature);
+					}	
+				}
+			}
+		}
+	}
+}
+function processFailed(e) {
+	alert(e.error.errorMsg);
+}
+function clearFeatures() {
+	vectorLayer.removeAllFeatures();
+	vectorLayer1.removeAllFeatures();
+	markerLayer.clearMarkers();
+}
+function clearPoint(){
+	drawPoint.removeFeatures();
+}
+</script>
+</head>
+<body onload="init()">
+	<div id="toolbar">
+		<input type="button" class="btn" value="点" onclick="drawGeometry3()" />
+		<input type="button" class="btn" value="线" onclick="drawGeometry4()" />
+		<input type="button" class="btn" value="矩形" onclick="drawGeometry5()" />
+		<input type="button" class="btn" value="圆" onclick="drawGeometry1()" />
+		<input type="button" class="btn" value="多边形" onclick="drawGeometry2()" />
+		<input type="button" class="btn" value="清除" onclick="clearFeatures()" />
+		<input type="button" class="btn" value="清除点" onclick="clearPoint()" />
+	</div>
+	<div id="map"></div>
+</body>
+</html>

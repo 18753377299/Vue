@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>反地址解析</title>
+<style type="text/css">
+*{
+    margin:0px;
+    padding:0px;
+}
+body, button, input, select, textarea {
+    font: 12px/16px Verdana, Helvetica, Arial, sans-serif;
+}
+p{
+    width:603px;
+    padding-top:3px;
+    margin-top:10px;
+    overflow:hidden;
+}
+#container {
+   min-width:603px;
+   min-height:767px;
+}
+</style>
+<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
+<script>
+var geocoder,map, marker = null;
+var init = function() {
+    var center = new qq.maps.LatLng(39.916527,116.397128);
+    map = new qq.maps.Map(document.getElementById('container'),{
+        center: center,
+        zoom: 13
+    });
+    var info = new qq.maps.InfoWindow({map: map});
+    geocoder = new qq.maps.Geocoder({
+        complete : function(result){
+            map.setCenter(result.detail.location);
+            var marker = new qq.maps.Marker({
+                map:map,
+                position: result.detail.location
+            });
+//             添加监听事件 当标记被点击了  设置图层
+            qq.maps.event.addListener(marker, 'click', function() {
+                info.open();
+                info.setContent('<div style="width:280px;height:100px;">'+
+                    result.detail.address+'</div>');
+                info.setPosition(result.detail.location);
+            });
+        }
+    });
+}
+
+function codeLatLng() {
+    //获取经纬度数值   按照,分割字符串 取出前两位 解析成浮点数
+    var input = document.getElementById("latLng").value;
+    var latlngStr = input.split(",",2);
+    var lat = parseFloat(latlngStr[0]);
+    var lng = parseFloat(latlngStr[1]);
+    var latLng = new qq.maps.LatLng(lat, lng);
+    //调用信息窗口
+    var info = new qq.maps.InfoWindow({map: map});
+    //调用获取位置方法
+    geocoder.getAddress(latLng);
+}
+</script>
+</head>
+<body onload="init()">
+<div>
+<input id="latLng" type="textbox" value="39.98174,116.30631">
+<input type="button" value="search" onclick="codeLatLng()">
+</div>
+<div id="container"></div>
+<p>输入坐标，点击search进行反地址解释，点击marker会弹出反查结果。</p>
+</body>
+</html>

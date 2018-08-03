@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>Insert title here</title>
+<script type="text/javascript">  
+        //浏览器加载以后立即执行,初始化  
+//         function executeInstently() {  
+//             var tmp = document.getElementsByTagName("ul");  
+//             for (i = 1; i < tmp.length; i++) {  
+//                 tmp[i].style.display = "none";  
+//             }  
+//         }  
+        function fuck(intag) {  
+            if (intag.tagName == "DIV" || intag.tagName == "div") {  
+                var taga = intag.parentNode;  
+                var present = taga.getElementsByTagName("ul")[0];  
+                if (present.style.display == "block") {  
+                    help(taga);  
+                } else {  
+                    help(taga);  
+                    present.style.display = "block";  
+                }  
+            }  
+            function help(intag) {  
+                var fathertag = intag.parentNode;  
+                var sontag = fathertag.getElementsByTagName("ul");  
+                for (i = 0; i < sontag.length; i++) {  
+                    sontag[i].style.display = "none";  
+                }  
+            }  
+        }  
+        executeInstently();  
+    </script>  
+</head>
+<body>
+   <ul>  
+            <li><div onclick="fuck(this)" style="display:none">一级菜单</div>  
+                <ul>  
+                    <li>第一</li>  
+                    <li>第一</li>  
+                    <li><div onclick="fuck(this)">二级菜单</div>  
+                        <ul>  
+                            <li>第二</li>  
+                            <li>第二</li>  
+                            <li>第二</li>  
+                        </ul></li>  
+                    <li>第一</li>  
+                </ul>
+            </li>  
+            
+            <li><div onclick="fuck(this)">一级菜单</div>
+            	<ul>  
+                    <li>第一</li>  
+                    <li>第一</li>
+                </ul> 
+            </li>  
+        </ul>  
+</body>
+</html>

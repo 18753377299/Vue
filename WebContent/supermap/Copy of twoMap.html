@@ -1,0 +1,81 @@
+<!DOCTYPE>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>twoMap</title>
+<style type="text/css">
+/* 	body{ */
+/* 		margin: 0; */
+/* 		overflow: hidden; */
+/* 		background: #fff; */
+/* 	} */
+/* 	#map{ */
+/* 		position: relative; */
+/* 		height: 520px; */
+/* 		border:1px solid #3473b7; */
+/* 	} */
+/* 	#toolbar { */
+/* 		position: relative; */
+/* 		height: 33px; */
+/* 		padding-top: 5px; */
+/* 	} */
+</style>
+<!-- <link href='./css/bootstrap.min.css' rel='stylesheet' /> -->
+<!-- <link href='./css/bootstrap-responsive.min.css' rel='stylesheet' /> -->
+<script src='../libs/SuperMap.Include.js'></script>
+<script type="text/javascript">
+	var map, layerWorld, layerJingjing;
+// 	var url="http://localhost:8090/iserver/services/map-wmts-vec/rest/maps/vec";
+// 	var url2="http://localhost:8090/iserver/services/map-wmts-cva/rest/maps/cva";
+// 	var url3="http://localhost:8090/iserver/services/map-jingjin/rest/maps/京津地区人口分布图_专题图";
+	
+// 	var url="http://localhost:8090/iserver/services/map-china400/rest/maps/China";
+
+// 	var url="http://localhost:8090/iserver/services/map-ChinaProvinces2/rest/maps/ChinaProvinces";
+// 	var url2="http://localhost:8090/iserver/services/map-ChinaProvinces2/rest/maps/BuildRegion_1@China";
+
+	var url="http://localhost:8090/iserver/services/map-BaoYu2/rest/maps/vec@t0.tianditu.com_WMTS1";
+	var url2="http://localhost:8090/iserver/services/map-BaoYu22/rest/maps/rain_daily_10a_test@a";
+	
+// 	var url2="http://localhost:8090/iserver/services/map-togetherAll/rest/maps/rain_daily_5a_test@together";
+	
+// 	var url2="http://localhost:8090/iserver/services/map-ChinaProvinces2/rest/maps/BuildRegion@China";
+	function init(){
+		map = new SuperMap.Map("map",{controls: [
+// 				new SuperMap.Control.LayerSwitcher(),
+				new SuperMap.Control.MousePosition(),
+				new SuperMap.Control.ScaleLine({position:'right'}),
+// 				new SuperMap.Control.OverviewMap(),//鹰眼
+				new SuperMap.Control.Zoom(),
+				new SuperMap.Control.Navigation({
+					dragPanOptions: {
+						enableKinetic: true
+					}
+				})
+				], allOverlays: true
+		});
+// 		map.addControl(new SuperMap.Control.ScaleLine()
+// // 		,new SuperMap.Pixel("SuperMap.Pixel.Mode.LeftTop")
+// 		,new SuperMap.Pixel("SuperMap.Pixel.Mode.RightTop")
+// 		);
+		
+		layerWorld = new SuperMap.Layer.TiledDynamicRESTLayer("vec@t0.tianditu.com_WMTS1", url, {transparent: true, cacheEnabled: false,isBaseLayer:true});
+		layerWorld.events.on({"layerInitialized": addLayer1});
+	}
+	
+	
+	function addLayer1(){
+		layerJingjing = new SuperMap.Layer.TiledDynamicRESTLayer("rain_daily_10a_test@a", url2, {transparent: true, cacheEnabled: false});
+		layerJingjing.events.on({"layerInitialized": addLayer2});
+		layerJingjing.setOpacity(0.6);
+	}
+	function addLayer2(){
+		map.addLayers([layerWorld,layerJingjing]);
+		map.setCenter(new SuperMap.LonLat(108.88,33.08), 1);
+	}
+</script>
+</head>
+<body onload="init()">
+	<div id="map" style="width:100%;heigth:100%"></div>
+</body>
+</html>

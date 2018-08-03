@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+function transfer () {
+	debugger;
+	var str="abcR中国";
+	var ar=str.split('');
+	for(var i=0;i<ar.length;i++){
+		if(ar[i].charCodeAt(0)>=97&&ar[i].charCodeAt(0)<=122){
+			ar[i]=ar[i].toUpperCase();
+		}
+	}
+// 	console.log("ar:"+ar);
+	//到这里已经全部转换了;
+	str="";
+	for(var i=0;i<ar.length;i++){
+	     str+=ar[i];
+	}
+	console.log("str:"+str); 
+}
+</script>
+</head>
+<body>
+<div id="toolbar">
+<!-- <input type="button" class="btn" value="距离量算" onclick="distanceMeasure()" /> -->
+<input type="button" class="btn" value="转换" onclick="transfer()" />
+<!-- <input type="button" class="btn" value="清除" onclick="clearFeatures()" /> -->
+</div>
+</body>
+</html>
