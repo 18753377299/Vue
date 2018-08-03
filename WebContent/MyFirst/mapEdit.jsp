@@ -40,7 +40,6 @@
 <body onload="init()">
     <!--地图显示的div-->
     <div id="map" style="position:absolute;left:0px;right:0px;width:800px;height:500px;" >             
-    </div>  
-    ssfs  
+    </div> 
 </body>
 </html>
