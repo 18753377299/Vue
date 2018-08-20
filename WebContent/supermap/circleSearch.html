@@ -19,8 +19,8 @@
 // 			url="http://localhost:8090/iserver/services/map-supermap_oracle_lqk2/rest/maps/Countries@World1";
 			url="http://localhost:8090/iserver/services/map-supermap_oracle_lqk/rest/maps/Countries@World";
             function init(){
-            	 layer = new SuperMap.Layer.TiledDynamicRESTLayer("World", url, {transparent: true, cacheEnabled: true}, {maxResolution:"auto"});
-//                 layer = new SuperMap.Layer.TiledDynamicRESTLayer("Countries@World", url, {transparent: true, cacheEnabled: true}, {maxResolution:"auto"});
+//             	 layer = new SuperMap.Layer.TiledDynamicRESTLayer("World", url, {transparent: true, cacheEnabled: true}, {maxResolution:"auto"});
+                layer = new SuperMap.Layer.TiledDynamicRESTLayer("Countries@World", url, {transparent: true, cacheEnabled: true}, {maxResolution:"auto"});
                 layer.events.on({"layerInitialized":addLayer});
                 vectorLayer = new SuperMap.Layer.Vector("Vector Layer");
                 vectorLayer1 = new SuperMap.Layer.Vector("Vector Layer1");
