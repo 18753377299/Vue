@@ -34,15 +34,15 @@ style = {
 	fillOpacity: 0.8,
 	pointRadius:2
 },
-// url1=host+"/iserver/services/map-jingjin/rest/maps/京津地区土地利用现状图",
-// url2=host+"/iserver/services/data-jingjin/rest/data/datasources/Jingjin/datasets/Landuse_R",
-// // url2=host+"/iserver/services/data-jingjin/rest/data/datasources/name/Jingjin/datasets/name/Landuse_R/",
-// url3=host+"/iserver/services/data-jingjin/rest/data/";
+url1=host+"/iserver/services/map-jingjin/rest/maps/京津地区土地利用现状图",
+url2=host+"/iserver/services/data-jingjin/rest/data/datasources/Jingjin/datasets/Landuse_R",
+// url2=host+"/iserver/services/data-jingjin/rest/data/datasources/name/Jingjin/datasets/name/Landuse_R/",
+url3=host+"/iserver/services/data-jingjin/rest/data/";
 
 
-url1="http://localhost:8090/iserver/services/map-supermap_oracle_lqk2/rest/maps/riskmap_1",
-url2="http://localhost:8090/iserver/services/data-supermap_oracle_lqk2/rest/data/datasources/SUPERMAP_ORACLE_FOREVER_RISKCONTROL/datasets/RISKMAP_DISASTER_1",
-url3="http://localhost:8090/iserver/services/data-supermap_oracle_lqk2/rest/data/";
+// url1="http://localhost:8090/iserver/services/map-supermap_oracle_lqk2/rest/maps/riskmap_1",
+// url2="http://localhost:8090/iserver/services/data-supermap_oracle_lqk2/rest/data/datasources/SUPERMAP_ORACLE_FOREVER_RISKCONTROL/datasets/RISKMAP_DISASTER_1",
+// url3="http://localhost:8090/iserver/services/data-supermap_oracle_lqk2/rest/data/";
 
 // url1="http://localhost:8090/iserver/services/map-supermap_oracle_lqk/rest/maps/Countries@World",
 // // url2="http://localhost:8090/iserver/services/data-supermap_oracle_lqk/rest/data/datasources/World/datasets/Countries/",
@@ -51,9 +51,9 @@ url3="http://localhost:8090/iserver/services/data-supermap_oracle_lqk2/rest/data
 
 
 function init(){
-// 	layer = new SuperMap.Layer.TiledDynamicRESTLayer("京津", url1, {transparent: true, cacheEnabled: false}, {maxResolution:"auto",bufferImgCount:0}); //将bufferImgCount设置为0，不使用缓存，编辑后，刷新图层，永远请求最新的图片
+	layer = new SuperMap.Layer.TiledDynamicRESTLayer("京津", url1, {transparent: true, cacheEnabled: false}, {maxResolution:"auto",bufferImgCount:0}); //将bufferImgCount设置为0，不使用缓存，编辑后，刷新图层，永远请求最新的图片
 // 	layer = new SuperMap.Layer.TiledDynamicRESTLayer("Countries@World", url1, {transparent: true, cacheEnabled: false}, {maxResolution:"auto",bufferImgCount:0}); //将bufferImgCount设置为0，不使用缓存，编辑后，刷新图层，永远请求最新的图片
-	layer = new SuperMap.Layer.TiledDynamicRESTLayer("RISKMAP_DISASTER2_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL", url1, {transparent: true, cacheEnabled: false}, {maxResolution:"auto",bufferImgCount:0}); //将bufferImgCount设置为0，不使用缓存，编辑后，刷新图层，永远请求最新的图片
+// 	layer = new SuperMap.Layer.TiledDynamicRESTLayer("RISKMAP_DISASTER2_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL", url1, {transparent: true, cacheEnabled: false}, {maxResolution:"auto",bufferImgCount:0}); //将bufferImgCount设置为0，不使用缓存，编辑后，刷新图层，永远请求最新的图片
 	
 	
 	layer.events.on({"layerInitialized":addLayer});
@@ -127,6 +127,7 @@ function addFeatureCompleted(drawGeometryArgs) {
 }
 //执行添加点地物
 function addPointFeatureCompleted(drawGeometryArgs) {
+	console.log("addPointFeatureCompleted");
 	console.log(drawGeometryArgs);
 	
 	drawPoint.deactivate();

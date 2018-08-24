@@ -39,9 +39,10 @@ public class Hello{
         try {
 			imageUrl = URLDecoder.decode(urlString, "UTF-8");
 			System.out.println("====================="+imageUrl);
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
+			System.out.println(10/0);
+		} catch (Exception e) {
 			e.printStackTrace();
+			e.getStackTrace();
 		}
         AjaxResult ajaxResult = getImageBase(urlString);
     }

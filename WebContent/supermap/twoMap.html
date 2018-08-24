@@ -37,8 +37,12 @@
 // 	var url="http://localhost:8090/iserver/services/map-BaoYu2/rest/maps/vec@t0.tianditu.com_WMTS1";
 // 	var url2="http://localhost:8090/iserver/services/map-BaoYu22/rest/maps/rain_daily_10a_test@a";
 	
-	var url="http://10.10.1.156:8099/iserver/services/map-china400/rest/maps/China_4326";
-	var url2="http://localhost:8090/iserver/services/map-supermap_oracle_lqk3/rest/maps/RISKMAP_DISASTER2_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL";
+// 	var url="http://10.10.1.156:8099/iserver/services/map-china400/rest/maps/China_4326";
+// 	var url2="http://localhost:8090/iserver/services/map-supermap_oracle_lqk3/rest/maps/RISKMAP_DISASTER2_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL";
+	
+	var url="http://localhost:8090/iserver/services/map-wmts-vec/rest/maps/vec";
+	var url2="http://localhost:8090/iserver/services/map-BaoYu4/rest/maps/rain_hazard_scale_1_1@暴雨";
+	
 	
 // 	var url2="http://localhost:8090/iserver/services/map-togetherAll/rest/maps/rain_daily_5a_test@together";
 	
@@ -61,13 +65,13 @@
 // // 		,new SuperMap.Pixel("SuperMap.Pixel.Mode.LeftTop")
 // 		,new SuperMap.Pixel("SuperMap.Pixel.Mode.RightTop")
 // 		);
-		layerWorld = new SuperMap.Layer.TiledDynamicRESTLayer("China_4326", url, {transparent: true, cacheEnabled: false,isBaseLayer:true});
+		layerWorld = new SuperMap.Layer.TiledDynamicRESTLayer("vec", url, {transparent: true, cacheEnabled: false,isBaseLayer:true});
 		layerWorld.events.on({"layerInitialized": addLayer1});
 	}
 	
 	
 	function addLayer1(){
-		layerJingjing = new SuperMap.Layer.TiledDynamicRESTLayer("RISKMAP_DISASTER2_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL", url2, {transparent: true, cacheEnabled: false});
+		layerJingjing = new SuperMap.Layer.TiledDynamicRESTLayer("rain_hazard_scale_1_1@暴雨", url2, {transparent: true, cacheEnabled: false});
 		layerJingjing.events.on({"layerInitialized": addLayer2});
 		layerJingjing.setOpacity(0.6);
 	}
