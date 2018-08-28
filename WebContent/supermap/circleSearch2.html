@@ -18,14 +18,11 @@
 //             url ="http://localhost:8090/iserver/services/map-World/rest/maps/Countries@World";
 // 			url="http://localhost:8090/iserver/services/map-supermap_oracle_lqk2/rest/maps/Countries@World1";
 // 			url="http://localhost:8090/iserver/services/map-supermap_oracle_lqk/rest/maps/Countries@World";
-
 			url="http://localhost:8090/iserver/services/map-china400/rest/maps/China_4326";
-// 			url2="http://localhost:8090/iserver/services/map-supermap_oracle_lqk3/rest/maps/China_Province_pg@China";
+			url2="http://localhost:8090/iserver/services/map-supermap_oracle_lqk3/rest/maps/China_Province_pg@China";
 
-// 			url="http://11.205.242.60:8090/iserver/services/map-supermap_oracle_lqk4/rest/maps/China_Province_pg@China";
-			url2="http://11.205.242.60:8090/iserver/services/map-supermap_oracle_lqk/rest/maps/PRPCADDRESS3_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL";
-			function init(){
-            	 layer = new SuperMap.Layer.TiledDynamicRESTLayer("China_Province_pg@China", url, {transparent: true, cacheEnabled: true}, {maxResolution:"auto"});
+            function init(){
+            	 layer = new SuperMap.Layer.TiledDynamicRESTLayer("China_4326", url, {transparent: true, cacheEnabled: true}, {maxResolution:"auto"});
 //                 layer = new SuperMap.Layer.TiledDynamicRESTLayer("China_Province_pg@China", url, {transparent: true, cacheEnabled: true}, {maxResolution:"auto"});
                 layer.events.on({"layerInitialized":addLayer});
                 vectorLayer = new SuperMap.Layer.Vector("Vector Layer");
@@ -64,14 +61,8 @@
                         }}),
                     drawPolygon1,drawPolygon2,drawPoint,drawLine,drawRectangle]
                 });
-                // 鼠标在地图上释放时被触发
-                map.events.on({
-                	   "mouseup":openInfoWin
-                	}); 
             }
-			function openInfoWin(){
-				alert('aaaa');
-			}
+
             function addLayer() {
                 map.addLayers([layer, vectorLayer, vectorLayer1, markerLayer]);
                 map.setCenter(new SuperMap.LonLat(0, 0), 0);
@@ -117,19 +108,8 @@
                 feature.geometry = drawGeometryArgs.feature.geometry,
                         feature.style = style;
                 vectorLayer.addFeatures(feature);
-              //foreignTableName 可以为数据集名或者连接的表的名称（也是可以成功的,用表名才能在前台获取到返回字段的值）
-                var joinItem=new SuperMap.REST.JoinItem({
-                	foreignTableName: "SMDTV_52",
-                	joinFilter: "SMDTV_52.PROPOSALNO = SMDTV_53.PROPOSALNO ",
-                	joinType: "INNERJOIN"
-                });
-                
-				//foreignTableName 可以为数据集名或者连接的表的名称
-//                 var joinItem=new SuperMap.REST.JoinItem({
-//                 	foreignTableName: "PRPCADDRESS4_1",
-//                 	joinFilter: "PRPCADDRESS4_1.PROPOSALNO = PRPCADDRESS3_1.PROPOSALNO ",
-//                 	joinType: "INNERJOIN"
-//                 });
+				
+//                 console.log(drawGeometryArgs);
                 
                 var queryParam, queryByGeometryParameters, queryService;
 //                 Countries@World@@Countries@World  
@@ -145,26 +125,8 @@
 
 //                 PRPCADDRESS_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL@@China_Province_pg@China  
                 queryParam = new SuperMap.REST.FilterParameter({
-                	joinItems:[joinItem],
-//                 	PRPCADDRESS3_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL@@PRPCADDRESS3_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL  
-//                 	name:"PRPCADDRESS4_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL"
-					name:"PRPCADDRESS3_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL",
-                	fields: [
-						"SMDTV_53.PROPOSALNO as PROPOSALNO",
-						"SMDTV_52.ADDRESSNAME as ADDRESSNAME",
-						"SMDTV_52.SUPREME as SUPREME"
-// 						"count(*) as count"						
-// 						"BBS_PARCEL.PARCELADDRESS as PARCELADDRESS",
-// 						"BBS_PARCEL.RIGHTSTYPE_CN as RIGHTSTYPE_CN",
-// 						"BBS_PARCEL.LANDPURPOSE_CN as LANDPURPOSE_CN",
-// 						"BBS_PARCEL.PLOTRATIO as PLOTRATIO",
-// 						"BBS_PARCEL.POSTADDRESS as POSTADDRESS",
-// 						"BBS_PARCEL.BOOKAREA as BOOKAREA",
-// 						"BBS_PARCEL.REALAREA as REALAREA",
-// 						"V_ENABLEVIEW_LAND.FJBM as FJBM"
-						]
-//                 		attributeFilter:"VALID like '%1%'"
-// 						displayFilters:["V_ENABLEVIEW_LAND.FJBM='"+_disCode +"' or V_ENABLEVIEW_LAND.FJBM is null 
+        			name:"PRPCADDRESS_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL"
+//         			name:"China_Province_pg@China"
         			});
 //                 queryParam = new SuperMap.REST.FilterParameter({
 // //         	 		attributeFilter: "Pop_1994>1000000000 and SmArea>100",                			
@@ -176,7 +138,9 @@
                 queryByGeometryParameters = new SuperMap.REST.QueryByGeometryParameters({
                     queryParams: [queryParam],
                     geometry: drawGeometryArgs.feature.geometry,
-                    spatialQueryMode: SuperMap.REST.SpatialQueryMode.INTERSECT
+                    spatialQueryMode: SuperMap.REST.SpatialQueryMode.INTERSECT,
+        			expectCount: 2,
+        			startRecord: 4
                 });
                 queryService = new SuperMap.REST.QueryByGeometryService(url2, {
                     eventListeners: {
