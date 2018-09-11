@@ -5,7 +5,7 @@
         <title>几何查询</title>
         <script src='../libs/SuperMap.Include.js'></script>
         <script type="text/javascript">
-            var map, local, layer, vectorLayer,chinaNameLayer, vectorLayer1, drawPolygon, markerLayer,drawPoint, drawLine,
+            var map, local,drawArea, layer, vectorLayer,vector,chinaNameLayer, vectorLayer1, drawPolygon, markerLayer,drawPoint, drawLine,
             style = {
                 strokeColor: "#304DBE",
                 strokeWidth: 1,
@@ -13,22 +13,12 @@
                 fillColor: "#304DBE",
                 fillOpacity: 0.5
             };
-//             host = document.location.toString().match(/file:\/\//)?"http://localhost:8090":'http://' + document.location.host,
-//             url=host+"/iserver/services/map-world/rest/maps/World";
-//             url ="http://localhost:8090/iserver/services/map-World/rest/maps/Countries@World";
-// 			url="http://localhost:8090/iserver/services/map-supermap_oracle_lqk2/rest/maps/Countries@World1";
-// 			url="http://localhost:8090/iserver/services/map-supermap_oracle_lqk/rest/maps/Countries@World";
 
 			var  url="http://11.205.242.31:8090/iserver/services/map-tianditu/rest/maps/矢量底图_经纬度";
-// 			url2="http://localhost:8090/iserver/services/map-supermap_oracle_lqk3/rest/maps/China_Province_pg@China";
-
-// 			url="http://11.205.242.60:8090/iserver/services/map-supermap_oracle_lqk4/rest/maps/China_Province_pg@China";
-// 			var url2="http://11.205.242.31:8090/iserver/services/map-dataLayer/rest/maps/PRPCADDRESS4_1@ORCL_riskcontrol";
 
 			var url2="http://11.205.242.31:8090/iserver/services/map-dataLayer/rest/maps/RISKMAP_ADDRESS_1@ORCL_riskcontrol";
 			
 			var chinaNameUrl="http://11.205.242.31:8090/iserver/services/map-tianditu/rest/maps/矢量中文注记_经纬度";
-// 			var chinaNameUrl="http://localhost:8090/iserver/services/map-FXDT2/rest/maps/rain_hazard_scale_1km@china";
 			
 			function init(){
 				layer = new SuperMap.Layer.TiledDynamicRESTLayer("矢量底图_经纬度", url,{transparent: true, cacheEnabled: true,isBaseLayer:true})
@@ -37,6 +27,7 @@
                 layer.events.on({"layerInitialized":addLayer});
                 vectorLayer = new SuperMap.Layer.Vector("Vector Layer");
                 vectorLayer1 = new SuperMap.Layer.Vector("Vector Layer1");
+                vector = new SuperMap.Layer.Vector("vector");
                 markerLayer = new SuperMap.Layer.Markers("Markers");
 
 
@@ -48,19 +39,13 @@
                 drawPolygon2 = new SuperMap.Control.DrawFeature(vectorLayer, SuperMap.Handler.Polygon);
                 drawPolygon2.events.on({"featureadded": drawCompleted});
 
-                //点查询
-                drawPoint = new SuperMap.Control.DrawFeature(vectorLayer, SuperMap.Handler.Point);
-                drawPoint.events.on({"featureadded": drawPointCompleted});
-
-                //线查询
-                drawLine = new SuperMap.Control.DrawFeature(vectorLayer, SuperMap.Handler.Path);
-                drawLine.events.on({"featureadded": drawPointCompleted});
-
                 //矩形
-
                 drawRectangle = new SuperMap.Control.DrawFeature(vectorLayer, SuperMap.Handler.Box);
                 drawRectangle.events.on({"featureadded": drawRectangleCompleted});
 
+                drawArea = new SuperMap.Control.DrawFeature(vectorLayer, SuperMap.Handler.Polygon);
+                drawArea.events.on({"featureadded": drawPolygonCompleted});
+                
                 map = new SuperMap.Map("map",{controls: [
                     new SuperMap.Control.LayerSwitcher(),
                     new SuperMap.Control.MousePosition(),
@@ -70,24 +55,19 @@
                         dragPanOptions: {
                             enableKinetic: true
                         }}),
-                    drawPolygon1,drawPolygon2,drawPoint,drawLine,drawRectangle], allOverlays: true
+                    drawPolygon1,drawPolygon2,drawRectangle,drawArea], allOverlays: true
                 });
-                // 鼠标在地图上释放时被触发
-//                 map.events.on({
-// //                 	   "mouseup":openInfoWin
-//                 	"mouseover":openInfoWin
-//                 	}); 
+               
+                
+//                 addRect();
             }
             
-			function openInfoWin(){
-				alert('aaaa');
-			}
 	         function addLayer() {
 	        	chinaNameLayer = new SuperMap.Layer.TiledDynamicRESTLayer('rain_hazard_scale_1km@china', chinaNameUrl, { transparent: true, cacheEnabled: true });
 	        	chinaNameLayer.events.on({"layerInitialized":addLayer2});               
 	        }
             function addLayer2() {
-            	map.addLayers([layer, vectorLayer, vectorLayer1, markerLayer,chinaNameLayer]);
+            	map.addLayers([layer, vectorLayer, vectorLayer1, markerLayer,chinaNameLayer,vector]);
                 map.setCenter(new SuperMap.LonLat(0, 0), 0);
             }
             function clearStatus(){
@@ -107,18 +87,7 @@
                 clearStatus();
                 drawPolygon2.activate();
             }
-            //画点
-            function drawGeometry3() {
-                //先清除上次的显示结果
-                clearStatus();
-                drawPoint.activate();
-            }
-            //画线
-            function drawGeometry4() {
-                //先清除上次的显示结果
-                clearStatus();
-                drawLine.activate();
-            }
+            
             //画矩形
             function drawGeometry5() {
                 //先清除上次的显示结果
@@ -127,16 +96,12 @@
             }
 
             function drawCompleted(drawGeometryArgs) {
+            	console.log('drawGeometryArgs')
+                console.log(drawGeometryArgs)
                 var feature = new SuperMap.Feature.Vector();
                 feature.geometry = drawGeometryArgs.feature.geometry,
                         feature.style = style;
                 vectorLayer.addFeatures(feature);
-              //foreignTableName 可以为数据集名或者连接的表的名称（也是可以成功的,用表名才能在前台获取到返回字段的值）
-//                 var joinItem=new SuperMap.REST.JoinItem({
-//                 	foreignTableName: "SMDTV_52",
-//                 	joinFilter: "SMDTV_52.PROPOSALNO = SMDTV_53.PROPOSALNO ",
-//                 	joinType: "INNERJOIN"
-//                 });
                 
 				//foreignTableName 可以为数据集名或者连接的表的名称
 //                 var joinItem=new SuperMap.REST.JoinItem({
@@ -152,60 +117,25 @@
 					        });
                 
                 var queryParam, queryByGeometryParameters, queryService;
-//                 Countries@World@@Countries@World  
-
-// RISKMAP_DISASTER_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL@@Countries@World 
-// RISKMAP_DISASTER2_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL@@Countries@World  
-//                 queryParam = new SuperMap.REST.FilterParameter({
-// //                 	 		attributeFilter: "Pop_1994>1000000000 and SmArea>100",                			
-// //                 			name: "RISKMAP_DISASTER_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL",
-//                 			name:"RISKMAP_DISASTER2_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL",
-//                 			attributeFilter:"VALID like '%1%'"
-//                 			});
-
-//                 PRPCADDRESS_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL@@China_Province_pg@China  
 	 
                 queryParam = new SuperMap.REST.FilterParameter({
-                	joinItems:[joinItem],
-//                 	PRPCADDRESS3_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL@@PRPCADDRESS3_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL  
-                	// 主表的图层
-//                 	name:"PRPCADDRESS3_1@ORCL_riskcontrol",
-					name:"RISKMAP_ADDRESS_1@ORCL_riskcontrol",
-					fields: [
-			            "RISKMAP_MAIN.PROPOSALNO as PROPOSALNO",
-			            "SMDTV_60.ADDRESSID as addressID",
-			            "SMDTV_60.ADDRESSNAME as addressName",
-			            "RISKMAP_MAIN.SUMAMOUNT as sumAmount",
-			            "RISKMAP_MAIN.STARTDATE as STARTDATE",
-			            "RISKMAP_MAIN.ENDDATE as ENDDATE",
-			            "SMX",
-			            "SMY"
-			          ],
-					attributeFilter:"VALIDSTATUS = '1' and sysdate > STARTDATE and sysdate < ENDDATE"
-//                 	fields: [
-// 						"SMDTV_53.PROPOSALNO as PROPOSALNO",
-// 						"SMDTV_52.ADDRESSNAME as ADDRESSNAME",
-// 						"SMDTV_52.SUPREME as SUPREME"
-// // 						"count(*) as count"						
-// // 						"BBS_PARCEL.PARCELADDRESS as PARCELADDRESS",
-// // 						"BBS_PARCEL.RIGHTSTYPE_CN as RIGHTSTYPE_CN",
-// // 						"BBS_PARCEL.LANDPURPOSE_CN as LANDPURPOSE_CN",
-// // 						"BBS_PARCEL.PLOTRATIO as PLOTRATIO",
-// // 						"BBS_PARCEL.POSTADDRESS as POSTADDRESS",
-// // 						"BBS_PARCEL.BOOKAREA as BOOKAREA",
-// // 						"BBS_PARCEL.REALAREA as REALAREA",
-// // 						"V_ENABLEVIEW_LAND.FJBM as FJBM"
-// 						]
-//                 		attributeFilter:"VALID like '%1%'"
-// 						displayFilters:["V_ENABLEVIEW_LAND.FJBM='"+_disCode +"' or V_ENABLEVIEW_LAND.FJBM is null 
-        			});
-//                 queryParam = new SuperMap.REST.FilterParameter({
-// //         	 		attributeFilter: "Pop_1994>1000000000 and SmArea>100",                			
-// //         			name: "RISKMAP_DISASTER_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL",
-//         			name:"District_pt@China"
-//         			});
-//                 queryParam = new SuperMap.REST.FilterParameter({name: "Countries@World.1"});
-// 				queryParam = new SuperMap.REST.FilterParameter({name: "Countries@World"});
+//                 	joinItems:[joinItem],
+                	name:"RISKMAP_ADDRESS_1@ORCL_riskcontrol",
+// 					fields: [
+// 			            "RISKMAP_MAIN.PROPOSALNO as PROPOSALNO",
+// 			            "SMDTV_60.ADDRESSID as addressID",
+// 			            "SMDTV_60.ADDRESSNAME as addressName",
+// 			            "RISKMAP_MAIN.SUMAMOUNT as sumAmount",
+// 			            "RISKMAP_MAIN.STARTDATE as STARTDATE",
+// 			            "RISKMAP_MAIN.ENDDATE as ENDDATE",
+// 			            "SMX",
+// 			            "SMY"
+// 			          ],
+// 			          attributeFilter:" exists (select 1 from riskmap_main)  and VALIDSTATUS = '1'"
+// 					attributeFilter:"VALIDSTATUS = '1' and sysdate > STARTDATE and sysdate < ENDDATE"
+// 			        attributeFilter:"1=1 and EXISTS (select riskmap_main.ADDRESSID from riskmap_main where SMDTV_60.ADDRESSID = riskmap_main.ADDRESSID and riskmap_main.riskcode = 'QCW')"
+// 				        attributeFilter:"1=1  and ADDRESSID in (select riskmap_main.ADDRESSID from riskmap_main where SMDTV_60.ADDRESSID = riskmap_main.ADDRESSID and riskmap_main.riskcode = 'QCW' )"
+                });
                 queryByGeometryParameters = new SuperMap.REST.QueryByGeometryParameters({
                     queryParams: [queryParam],
                     geometry: drawGeometryArgs.feature.geometry,
@@ -222,12 +152,14 @@
 
             //矩形
             function drawRectangleCompleted(obj) {
+            	console.log('obj')
+                console.log(obj)
                 drawRectangle.deactivate();
                 //先清除上次的显示结果
                 clearStatus();
 
                 var feature = obj.feature;
-                feature.style = style;
+//                 feature.style = style;
                 vectorLayer.addFeatures(feature);
                 
 //                 var joinItem=new SuperMap.REST.JoinItem({
@@ -241,54 +173,18 @@
 				          joinType: "INNERJOIN"
 				        });
                 
-                var queryBounds = feature.geometry.bounds;
-
+//                 var queryBounds = feature.geometry.bounds;
+                var queryBounds = queryBounds = new SuperMap.Bounds(111.28885742187,35.591054046875,122.71463867187,40.952382171875)
+				console.log(queryBounds)
                 var queryParam, queryByBoundsParams, queryService;
-//                 District_pt@China
-//                 queryParam = new SuperMap.REST.FilterParameter({name: "Capitals@World.1"});//FilterParameter设置查询条件，name是必设的参数，（图层名称格式：数据集名称@数据源别名）
-// 				queryParam = new SuperMap.REST.FilterParameter({
-// 					joinItems:[joinItem],
-// 					name: "RISKMAP_ADDRESS_1@ORCL_riskcontrol",
-// 					fields: [
-// 			            "RISKMAP_MAIN.PROPOSALNO as PROPOSALNO",
-// 			            "SMDTV_60.ADDRESSID as addressID",
-// 			            "SMDTV_60.ADDRESSNAME as addressName",
-// 			            "RISKMAP_MAIN.SUMAMOUNT as sumAmount",
-// 			            "RISKMAP_MAIN.STARTDATE as STARTDATE",
-// 			            "RISKMAP_MAIN.ENDDATE as ENDDATE",
-// 			            "SMX",
-// 			            "SMY"
-// 			          ],
-// 			         attributeFilter:"VALIDSTATUS = '1'"
-// // 			        attributeFilter:"VALIDSTATUS = '1' and sysdate > STARTDATE and sysdate < ENDDATE"
-// 				});
-				var joinItem = new SuperMap.REST.JoinItem({
-					          foreignTableName:"RISKMAP_MAIN",
-					          joinFilter: "RISKMAP_MAIN.ADDRESSID = SMDTV_60.ADDRESSID",
-					          joinType: "INNERJOIN"
-					        });
-                
-                var queryParam, queryByGeometryParameters, queryService;
-//                 Countries@World@@Countries@World  
-
-// RISKMAP_DISASTER_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL@@Countries@World 
-// RISKMAP_DISASTER2_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL@@Countries@World  
-//                 queryParam = new SuperMap.REST.FilterParameter({
-// //                 	 		attributeFilter: "Pop_1994>1000000000 and SmArea>100",                			
-// //                 			name: "RISKMAP_DISASTER_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL",
-//                 			name:"RISKMAP_DISASTER2_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL",
-//                 			attributeFilter:"VALID like '%1%'"
-//                 			});
-
-//                 PRPCADDRESS_1@SUPERMAP_ORACLE_FOREVER_RISKCONTROL@@China_Province_pg@China  
-	 
+                	 
                 queryParam = new SuperMap.REST.FilterParameter({
                 	joinItems:[joinItem],
 					name:"RISKMAP_ADDRESS_1@ORCL_riskcontrol",
 					fields: [
-			            "RISKMAP_MAIN.PROPOSALNO  PROPOSALNO",
-// 			            "SMDTV_60.ADDRESSID as addressID",
-// 			            "SMDTV_60.ADDRESSNAME as addressName",
+// 			            "RISKMAP_MAIN.PROPOSALNO as PROPOSALNO",
+			            "SMDTV_60.ADDRESSID as addressID",
+			            "SMDTV_60.ADDRESSNAME as addressName",
 // 			            "RISKMAP_MAIN.SUMAMOUNT as sumAmount",
 // 			            "RISKMAP_MAIN.STARTDATE as STARTDATE",
 // 			            "RISKMAP_MAIN.ENDDATE as ENDDATE",
@@ -304,7 +200,9 @@
         			});
                 queryByBoundsParams = new SuperMap.REST.QueryByBoundsParameters({
                 	queryParams: [queryParam],
-                     bounds: queryBounds
+//                 	geometry: obj.feature.geometry,
+//                 	spatialQueryMode: SuperMap.REST.SpatialQueryMode.INTERSECT
+                    bounds: queryBounds
                     });//queryParams查询过滤条件参数数组。bounds查询范围
                 queryService = new SuperMap.REST.QueryByBoundsService(url2, {
                     eventListeners: {
@@ -315,34 +213,10 @@
                 queryService.processAsync(queryByBoundsParams);//向服务端传递参数，然后服务端返回对象
             }
             
-            function drawPointCompleted(drawGeometryArgs) {
-                var feature = new SuperMap.Feature.Vector();
-                feature.geometry = drawGeometryArgs.feature.geometry,
-                        feature.style = style;
-                vectorLayer.addFeatures(feature);
-
-                var queryParam, queryByGeometryParameters, queryService;
-                queryParam = new SuperMap.REST.FilterParameter({name: "Countries@World"});
-                queryByGeometryParameters = new SuperMap.REST.QueryByGeometryParameters({
-                    queryParams: [queryParam],
-                    geometry: drawGeometryArgs.feature.geometry,
-                    spatialQueryMode: SuperMap.REST.SpatialQueryMode.INTERSECT
-                });
-                queryService = new SuperMap.REST.QueryByGeometryService(url, {
-                    eventListeners: {
-                        "processCompleted": processCompleted,
-                        "processFailed": processFailed
-                    }
-                });
-                queryService.processAsync(queryByGeometryParameters);
-            }
-           
-
+            
             function processCompleted(queryEventArgs) {
                 drawPolygon1.deactivate();
                 drawPolygon2.deactivate();
-                drawPoint.deactivate();
-                drawLine.deactivate();
                 drawRectangle.deactivate();
                 var i, j, result = queryEventArgs.result;
                 
@@ -355,9 +229,7 @@
                             for (j=0; j<recordsets[i].features.length; j++) {
                                 var feature = recordsets[i].features[j];
                                 var point = feature.geometry;
-//                                 console.log('result.recordsets');
-//                                 console.log(point.CLASS_NAME);
-//                                 console.log(SuperMap.Geometry.Point.prototype.CLASS_NAME);
+
                                 if(point.CLASS_NAME == SuperMap.Geometry.Point.prototype.CLASS_NAME){
                                     var size = new SuperMap.Size(44, 33),
                                             offset = new SuperMap.Pixel(-(size.w/2), -size.h),
@@ -383,16 +255,48 @@
                 vectorLayer1.removeAllFeatures();
                 markerLayer.clearMarkers();
             }
+            function addRect(){
+            	// 矩形
+            	var x = 0;
+            	var y = 0;
+            	var w = 40;
+            	var h = 30;
+            	var rectangle = new SuperMap.Geometry.Rectangle(x, y, w, h);
+            	var rectangleVector = new SuperMap.Feature.Vector(rectangle);
+//             	vector.addFeature(rectangleVector)
+            	vectorLayer.addFeatures([rectangleVector])
+            }
+            function drawArea(){
+            	drawArea.activate();
+            }
+            function drawPolygonCompleted (drawGeometryArgs) {
+//                 this.polygonFlag =  ''
+                //停止画面控制
+                drawArea.deactivate()
+//                 this.commonMeasure(drawGeometryArgs)
+                //获得图层几何对象
+               var geometry = drawGeometryArgs.feature.geometry,
+                 measureParam = new SuperMap.REST.MeasureParameters(geometry), /* MeasureParameters：量算参数类。 客户端要量算的地物间的距离或某个区域的面积*/
+                  myMeasuerService= new SuperMap.REST.MeasureService(url); //量算服务类，该类负责将量算参数传递到服务端，并获取服务端返回的量算结果
+               myMeasuerService.events.on({ "processCompleted": measurePolygonCompleted });
+        
+               //对MeasureService类型进行判断和赋值，当判断出是LineString时设置MeasureMode.DISTANCE，否则是MeasureMode.AREA
+               myMeasuerService.measureMode = SuperMap.REST.MeasureMode.AREA;
+        
+               myMeasuerService.processAsync(measureParam); //processAsync负责将客户端的量算参数传递到服务端。
+              }
+            function measurePolygonCompleted(measureEventArgs){
+                console.log(measureEventArgs)
+             }
         </script>
     </head>
     <body onload="init()">
         <div id="toolbar">
-            <input type="button" class="btn" value="点" onclick="drawGeometry3()" />
-            <input type="button" class="btn" value="线" onclick="drawGeometry4()" />
             <input type="button" class="btn" value="矩形" onclick="drawGeometry5()" />
             <input type="button" class="btn" value="圆" onclick="drawGeometry1()" />
             <input type="button" class="btn" value="多边形" onclick="drawGeometry2()" />
-            <input type="button" class="btn" value="经纬度" onclick="drawGeometry000()" />
+            <input type="button" class="btn" value="添加矩形" onclick="addRect()" />
+            <input type="button" class="btn" value="画面" onclick="drawArea()" />
             <input type="button" class="btn" value="清除" onclick="clearFeatures()" />
         </div>
         <div id="map"></div>

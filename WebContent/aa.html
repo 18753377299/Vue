@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gbk">
+    <script type="text/javascript">
+      function focusNextInput(thisInput){
+          var inputs = document.getElementsByTagName("input");
+		  // console.log(inputs)
+          for(var i = 0;i<inputs.length;i++){
+            // 如果是最后一个，则焦点回到第一个
+            if(i==(inputs.length-1)){
+              inputs[0].focus();
+              break;
+            }else if(thisInput == inputs[i]){
+              inputs[i+1].focus();
+              break;
+            }
+          }
+      }  
+    </script>
+  </head>
+<body>
+  <table>
+    姓名：<input type="text" onkeypress="if(event.keyCode==13) focusNextInput(this);">
+    年龄：<input type="text" onkeypress="if(event.keyCode==13) focusNextInput(this);">
+    工号：<input type="text" onkeypress="if(event.keyCode==13) focusNextInput(this);">
+  </table>
+</body>
+</html>

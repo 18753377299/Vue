@@ -33,8 +33,9 @@ strokeWidth: 2,
 pointerEvents: "visiblePainted",
 fillColor: "#304DBE",
 fillOpacity: 0.8
-},
-url=host+"/iserver/services/map-world/rest/maps/World";
+};
+var url2="http://11.205.242.31:8090/iserver/services/map-world/rest/maps/World";
+var url="http://11.205.242.31:8090/iserver/services/map-tianditu/rest/maps/矢量底图_经纬度";
 function init(){
 //新建线矢量图层
 lineLayer = new SuperMap.Layer.Vector("lineLayer");
@@ -52,7 +53,7 @@ events.on({ "loadstart": loadStartListener });
 */
 drawLine.events.on({"featureadded": drawCompleted});
 //定义layer图层，TiledDynamicRESTLayer：分块动态 REST 图层
-layer = new SuperMap.Layer.TiledDynamicRESTLayer("World", url, { transparent: true, cacheEnabled: true }, { maxResolution: "auto" });
+layer = new SuperMap.Layer.TiledDynamicRESTLayer("矢量底图_经纬度", url, { transparent: true, cacheEnabled: true }, { maxResolution: "auto" });
 //为图层初始化完毕添加addLayer()事件
 layer.events.on({"layerInitialized":addLayer});
 map = new SuperMap.Map("map",{controls: [
@@ -84,7 +85,7 @@ drawLine.deactivate();
 //获得图层几何对象
 var geometry = drawGeometryArgs.feature.geometry,
 measureParam = new SuperMap.REST.MeasureParameters(geometry), /* MeasureParameters：量算参数类。 客户端要量算的地物间的距离或某个区域的面积*/
-myMeasuerService = new SuperMap.REST.MeasureService(url); //量算服务类，该类负责将量算参数传递到服务端，并获取服务端返回的量算结果
+myMeasuerService = new SuperMap.REST.MeasureService(url2); //量算服务类，该类负责将量算参数传递到服务端，并获取服务端返回的量算结果
 myMeasuerService.events.on({ "processCompleted": measureCompleted });
 
 //对MeasureService类型进行判断和赋值，当判断出是LineString时设置MeasureMode.DISTANCE，否则是MeasureMode.AREA
