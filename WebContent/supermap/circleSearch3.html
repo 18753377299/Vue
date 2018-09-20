@@ -100,7 +100,7 @@
                 console.log(drawGeometryArgs)
                 var feature = new SuperMap.Feature.Vector();
                 feature.geometry = drawGeometryArgs.feature.geometry,
-                        feature.style = style;
+                feature.style = style;
                 vectorLayer.addFeatures(feature);
                 
 				//foreignTableName 可以为数据集名或者连接的表的名称
@@ -288,6 +288,22 @@
             function measurePolygonCompleted(measureEventArgs){
                 console.log(measureEventArgs)
              }
+            // 首先我们需要根据条件查询出一块行政区边界，然后我们通过行政区边界的数据来制作一个几何图形，
+//             	通过这个几何图形来与台风是否相交来判断台风是否过界（试验一下几何图形）
+			function addPolygon(){
+            	
+            	var points =[new SuperMap.Geometry.Point(0,4010338),
+            	             new SuperMap.Geometry.Point(1063524,4010338),
+            	             new SuperMap.Geometry.Point(1063524,3150322),
+            	             new SuperMap.Geometry.Point(0,3150322)
+          	         ],
+          	         linearRings = new SuperMap.Geometry.LinearRing(points),
+          	         region = new SuperMap.Geometry.Polygon([linearRings]);
+     	         
+            	var ellipseVector= new SuperMap.Feature.Vector(region);
+            	vectorLayer.addFeatures([ellipseVector]);
+            }
+			
         </script>
     </head>
     <body onload="init()">
@@ -296,7 +312,8 @@
             <input type="button" class="btn" value="圆" onclick="drawGeometry1()" />
             <input type="button" class="btn" value="多边形" onclick="drawGeometry2()" />
             <input type="button" class="btn" value="添加矩形" onclick="addRect()" />
-            <input type="button" class="btn" value="画面" onclick="drawArea()" />
+            <input type="button" class="btn" value="添加多边形" onclick="addPolygon()" />
+            <input type="button" class="btn" value="画面" onclick="drawArea()" />                        
             <input type="button" class="btn" value="清除" onclick="clearFeatures()" />
         </div>
         <div id="map"></div>
