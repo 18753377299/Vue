@@ -1,0 +1,120 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>几何查询</title>
+        <script src='../libs/SuperMap.Include.js'></script>
+        <script type="text/javascript">
+            var map, local,drawArea,vectorLayer2, layer,vectorLayer,vector,chinaNameLayer, vectorLayer1, drawPolygon, markerLayer,drawPoint, drawLine,
+            style = {
+                strokeColor: "#304DBE",
+                strokeWidth: 1,
+                pointerEvents: "visiblePainted",
+                fillColor: "#304DBE",
+                fillOpacity: 0.5
+            };
+
+			var  url="http://11.205.242.31:8090/iserver/services/map-tianditu/rest/maps/矢量底图_经纬度";
+
+			var url2="http://11.205.242.31:8090/iserver/services/map-dataLayer/rest/maps/RISKMAP_ADDRESS_1@ORCL_riskcontrol";
+			
+			var chinaNameUrl="http://11.205.242.31:8090/iserver/services/map-tianditu/rest/maps/矢量中文注记_经纬度";
+			
+			function init(){
+				layer = new SuperMap.Layer.TiledDynamicRESTLayer("矢量底图_经纬度", url,{transparent: true, cacheEnabled: true,isBaseLayer:true})
+//             	 layer = new SuperMap.Layer.TiledDynamicRESTLayer("China_Province_pg@China", url, {transparent: true, cacheEnabled: true}, {maxResolution:"auto"});
+//                 layer = new SuperMap.Layer.TiledDynamicRESTLayer("China_Province_pg@China", url, {transparent: true, cacheEnabled: true}, {maxResolution:"auto"});
+                layer.events.on({"layerInitialized":addLayer});
+                vectorLayer = new SuperMap.Layer.Vector("Vector Layer");
+                vectorLayer1 = new SuperMap.Layer.Vector("Vector Layer1");
+                vectorLayer2 = new SuperMap.Layer.Vector("vectorLayer2");
+                
+                vector = new SuperMap.Layer.Vector("vector");
+                markerLayer = new SuperMap.Layer.Markers("Markers");
+
+                var callbacks = {
+//                 	    over: function(currentGraphic){//todo},
+//                 	    out: function(currentGraphic){//todo},
+                	    click: function(currentGraphic){
+                    	    alert("abc");
+                    	    }
+//                 	    clickout: function(lastGraphic){//todo},
+                	};
+                //几何圆查询
+                
+                var selectGraphic = new SuperMap.Control.SelectFeature(vectorLayer2,{
+//                 			onSelect: onGraphicSelect,
+                			callbacks: callbacks,
+//                 			hover: false
+//          	       			onUnselect:onUnGraphicSelect
+         	       			});
+                
+                map = new SuperMap.Map("map",{controls: [
+                    new SuperMap.Control.LayerSwitcher(),
+                    new SuperMap.Control.MousePosition(),
+                    new SuperMap.Control.ScaleLine(),
+                    new SuperMap.Control.Zoom(),
+                    new SuperMap.Control.Navigation({
+                        dragPanOptions: {
+                            enableKinetic: true
+                        }})
+                    ], allOverlays: true
+                });
+                
+                map.addControl(selectGraphic);
+                //激活控件
+                selectGraphic.activate();
+                
+//                 addRect();
+            }
+            function edit(){
+            	selectGraphic.activate();
+            }
+			function onGraphicSelect(graphic) {
+			    alert("123");
+			}
+			   //要素被取消选中时调用此函数,需要传入当前要素参数graphic
+			   function onUnGraphicSelect(graphic) {
+				   alert("1111");
+			   }
+	         function addLayer() {
+	        	chinaNameLayer = new SuperMap.Layer.TiledDynamicRESTLayer('矢量中文注记_经纬度', chinaNameUrl, { transparent: true, cacheEnabled: true });
+	        	chinaNameLayer.events.on({"layerInitialized":addLayer2});               
+	        }
+            function addLayer2() {
+            	map.addLayers([layer, vectorLayer, vectorLayer1,chinaNameLayer,vectorLayer2]);
+                map.setCenter(new SuperMap.LonLat(0, 0), 0);
+            }
+            
+            function addRect(){         	
+            	var point= new SuperMap.Geometry.Point(100,39);
+            	var pointVector = new SuperMap.Feature.Vector(point);
+            	pointVector.style={
+//             			cursor:"auto",
+            			fillColor:"red",
+            			strokeColor:"yellow",
+            			pointRadius:7
+            			};
+            	
+//             	vector.addFeature(rectangleVector)
+//             	vectorLayer2.addFeatures([rectangleVector,pointVector]);
+            	vectorLayer2.addFeatures([pointVector]);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+//             	pointVector.events.on({"click": mapClicked}); 
+				
+            }
+            function drawArea(){
+            	drawArea.activate();
+            }
+           
+        </script>
+    </head>
+    <body onload="init()">
+        <div id="toolbar">
+            <input type="button" class="btn" value="添加矩形" onclick="addRect()" />
+            <input type="button" class="btn" value="编辑" onclick="edit()" />                        
+
+        </div>
+        <div id="map"></div>
+    </body>
+</html>

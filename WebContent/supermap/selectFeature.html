@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>矢量图层选择事件</title>
+<style type="text/css">
+body{
+margin: 0;
+/* overflow: hidden; */
+background: #fff;
+}
+#map{
+/* position: relative; */
+height: 510px;
+border:1px solid #3473b7;
+}
+
+#toolbar {
+/* position: relative; */
+padding-top: 5px;
+padding-bottom: 10px;
+}
+</style>
+<!-- <link href='./css/bootstrap.min.css' rel='stylesheet' /> -->
+<!-- <link href='./css/bootstrap-responsive.min.css' rel='stylesheet' /> -->
+<script src = '../libs/SuperMap.Include.js'></script>
+<script type="text/javascript">
+var map,layer, vectorlayer,pointFeature,vectorlayer1,
+host = document.location.toString().match(/file:\/\//) ? "http://localhost:8090" : 'http://' + document.location.host;
+url = "http://11.205.242.31:8090/iserver/services/map-world/rest/maps/World";
+
+function init()
+{
+map = new SuperMap.Map("map",{controls:[
+new SuperMap.Control.Zoom() ,
+new SuperMap.Control.Navigation() ,
+new SuperMap.Control.LayerSwitcher()
+]});
+layer= new SuperMap.Layer.TiledDynamicRESTLayer("World", url, null,{maxResolution:"auto"});
+layer.events.on({"layerInitialized":addLayer});
+vectorlayer= new SuperMap.Layer.Vector("vectorLayer");
+vectorlayer1= new SuperMap.Layer.Vector("vectorLayer1");
+
+var callbacks={
+click: function(currentFeature){
+// 	alert("123");
+closeInfoWin();
+var popup = new SuperMap.Popup.FramedCloud("popwin",
+new SuperMap.LonLat(0,0),
+null,
+"矢量图层鼠标点击事件 ",
+null,
+true);
+infowin = popup;
+map.addPopup(popup);
+}
+};
+var selectFeature = new SuperMap.Control.SelectFeature(vectorlayer1,
+{
+	
+callbacks: callbacks,
+hover: true
+});
+map.addControl(selectFeature);
+selectFeature.activate();
+
+}
+
+function addLayer(){
+
+map.addLayers([layer,vectorlayer,vectorlayer1]);
+//显示地图范围
+map.setCenter(new SuperMap.LonLat(0, 0), 0);
+}
+var infowin=null;
+
+function closeInfoWin(){
+if(infowin){
+try{
+infowin.hide();
+infowin.destroy();
+}
+catch(e){}
+}
+}
+function addData()
+{
+
+vectorlayer.removeAllFeatures();
+var point= new SuperMap.Geometry.Point(0,0);
+pointFeature = new SuperMap.Feature.Vector(point);
+pointFeature.style={
+fillColor:"red",
+strokeColor:"yellow",
+pointRadius:7
+};
+// vectorlayer.addFeatures(pointFeature);
+vectorlayer1.addFeatures([pointFeature]);
+}
+</script>
+</head>
+<body onload="init()" >
+<div>
+<input type="button" class="btn" value ="加载数据"onclick="addData()"/>
+</div>
+<div id="map"></div>
+
+</body>
+</html>

@@ -1033,6 +1033,7 @@ function Query_SetNum() {
         Query_LSZHJson.pagesize = 1000;
     }
 }
+// 历史地震
 function Begin_Query_DZ() {
     if (LSZH_EChart_Layer != null) {
         var LayerDiv = LSZH_EChart_Layer.div;
