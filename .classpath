@@ -1,19 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/collections-generic-4.01.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.ibm.mq.allclient.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.analyst.addressmatching.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.analyst.navigation.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.analyst.networkanalyst.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.analyst.spatialanalyst.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.analyst.spatialstatistics.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.analyst.terrainanalyst.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.analyst.trafficanalyst.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.chart.conversion.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.chart.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.data.cloudlicense.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.data.conversion.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.data.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.data.processing.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.data.topology.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.layout.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.license.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.mapping.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.plot.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.realspace.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.realspace.networkanalyst.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.realspace.spatialanalyst.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.tilestorage.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/com.supermap.ui.controls.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-codec-1.11.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-collections4-4.1.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-httpclient-3.1.jar" sourcepath="C:/Users/Administrator/AppData/Local/Temp/.org.sf.feeling.decompiler1544402899099/source/commons-httpclient-3.1-sources.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-lang3-3.4.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-logging-1.2.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/core-renderer-2011.04.16-patched-play-pdf-0.8.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/core-renderer-R8pre2.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/fastjson-1.2.4.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/freemarker-2.3.12.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/fscontext.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/httpclient-4.5.3.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/httpcore-4.4.5.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/imsdriver-1.0.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/imsdriver(2).jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/itext-4.2.1.jar"/>
@@ -30,11 +57,12 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/looks-2.1.4.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/nekohtml-1.9.22.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/ognl-2.6.11.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/ojdbc14-10.2.0.4.0.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/org.apache.commons.collections-3.2.1.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/org.apache.poi.xwpf.converter.core-1.0.6.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/org.apache.poi.xwpf.converter.pdf-1.0.6.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-1.12.jar"/>
-	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-3.17.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-3.17.jar" sourcepath="C:/Users/Administrator/AppData/Local/Temp/.org.sf.feeling.decompiler1544402899099/source/poi-3.17-sources.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-3.9.20130515.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-ooxml-3.17-javadoc.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-ooxml-3.17-sources.jar"/>
@@ -43,6 +71,7 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-scratchpad-3.17.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/providerutil.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/PushJavaSDK.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/spring-core-4.3.2.RELEASE.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/struts2-core-2.5.14.1.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/xmlbeans-2.6.2.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/xmlworker-5.5.12.jar"/>

@@ -18,7 +18,7 @@ body{
 <script src = '../jquery/jquery.min.js'></script>
 <script src = '../libs/SuperMap.Include.js'></script>
 <script type="text/javascript">
-var map, layer,drawPolygon1,drawPoint,vectorLayer1,markerLayer,framedCloud,modifyLayer,
+var map, layer,drawPolygon1,drawPoint,vectorLayer1,markerLayer,framedCloud,modifyLayer,vector,
     pointArray=[["117.190182","39.125596"],
                 ["114.502461","38.045474"],
                 ["112.549248","37.857014"]],
@@ -43,7 +43,8 @@ var map, layer,drawPolygon1,drawPoint,vectorLayer1,markerLayer,framedCloud,modif
    url3="http://10.10.1.156:8099/iserver/services/map-ChinaProvinces/rest/maps/ChinaProvinces",
 //    url="http://10.10.1.156:8099/iserver/services/map-china400/rest/maps/China_4326";
    
-    url = "http://localhost:8090/iserver/services/map-supermap_oracle_lqk3/rest/maps/Countries@World_2";
+//     url = "http://localhost:8090/iserver/services/map-supermap_oracle_lqk3/rest/maps/Countries@World_2";
+    url="http://10.10.2.241:8091/iserver/services/map-FXDT/rest/maps/china_province@areakind";
 // url="http://localhost:8090/iserver/services/map-BaoYu2/rest/maps/vec@t0.tianditu.com_WMTS1";
 //    url="http://localhost:8090/iserver/services/map-BaoYu22/rest/maps/rain_daily_10a_test@a";
 function init(){
@@ -58,6 +59,7 @@ function init(){
 
 	vectorLayer = new SuperMap.Layer.Vector("Vector Layer");
 	vectorLayer1 = new SuperMap.Layer.Vector("Vector Layer1");
+	vector = new SuperMap.Layer.Vector("Vector");
 	//初始化标记图层类
 	markerLayer = new SuperMap.Layer.Markers("Markers");
 	markerLayer1 = new SuperMap.Layer.Markers("Markers1");
@@ -91,7 +93,7 @@ function switchBaseMap(){
 //      layer.events.on({"layerInitialized":addLayer1});
 }
 function addLayer1(){
-	map.addLayers([modifyLayer]);
+	map.addLayers([modifyLayer,vector]);
 	//显示地图范围
 // 	map.setCenter(new SuperMap.LonLat(104.09,30.58), 1);
 	map.setCenter(new SuperMap.LonLat(104.34 , 36.1), 1);
@@ -134,13 +136,165 @@ function LSLJ_DrawPath(xh,pathxh){
         };
         vectorLayer.addFeatures([line1Vector]);
     }
+	 var _selfMarker = this;
+     Marker.events.on({
+       "mouseover": function (e) {
+         var marker = this;
+        	console.log(e)
+//         var Info = marker.Data;
+//         console.log(_selfMarker);
+         var Info= {"bj_7":"100-180公里",
+           "bj_10": "", "bj_12": "", "fs": 18,"lat": marker.lonlat.lat,"lon": marker.lonlat.lon, "sj": "2018-05-03 20:00","zxqy": 998,
+           "ArrFQInfo":[180, 100, 100, 180, 0, 0, 0, 0, 0, 0, 0, 0]
+         };
+        var strHtml = '<div class="Info_WinCon" style="overflow-x:hidden;overflow-y:auto;">';
+        strHtml += "<table name='TFInfo'>";
+        strHtml += '<tr><td name="col1">过去时间</td><td>' + Info["sj"].substr(0, 13) + '</td></tr>';
+        strHtml += '<tr><td name="col1">中心位置</td><td>' + Info["lon"] + "N " + Info["lat"] + 'E</td></tr>';
+        strHtml += '<tr><td name="col1">最大风速</td><td>' + Info["fs"] + '米/秒</td></tr>';
+        strHtml += '<tr><td name="col1">中心气压</td><td>' + Info["zxqy"] + '百帕</td></tr>';
+        if (Info["bj_7"] != undefined) {
+          strHtml += '<tr><td name="col1">七级风圈半径</td><td>' + Info["bj_7"] + '</td></tr>';
+        }
+        if (Info["bj_10"] != undefined) {
+          strHtml += '<tr><td name="col1">十级风圈半径</td><td>' + Info["bj_10"] + '</td></tr>';
+        }
+        if (Info["bj_12"] != undefined) {
+          strHtml += '<tr><td name="col1">十二级风圈半径</td><td>' + Info["bj_12"] + '</td></tr>';
+        }
+//         marker.lonlat.lon   marker.lonlat.lat
+        var point = new SuperMap.LonLat(parseFloat(Info["lon"]), parseFloat(Info["lat"]));
+
+//          var point = new SuperMap.LonLat(marker.lonlat.lon, marker.lonlat.lat);
+        strHtml += '</table></div>';
+        var InfoWin_Json = { content: strHtml, point: point };
+        $("#content").html(strHtml);
+        var pixel = map.getLayerPxFromLonLat(point);
+        $("#curve").css("left", pixel.x-110);
+        $("#curve").css("top", pixel.y-20);
+        $("#curve").show();
+//         ShowInfoWin();
+         if (Info.ArrFQInfo != undefined) {
+//           		map.removeLayer(vectorLayer)
+	           DrawSector(Info.ArrFQInfo, point);
+// 	          var sides = 50;
+// 	//           117.190182","39.125596
+// 	          var origin = new SuperMap.Geometry.Point(marker.lonlat.lon, marker.lonlat.lat);
+// 	          var polygon = SuperMap.Geometry.Polygon.createRegularPolygonCurve(origin,2,sides,180,0);
+// 	          var cuvreVector = new SuperMap.Feature.Vector(polygon);
+// 	          cuvreVector.style = {
+// 	            strokeColor: "#1E90FF",
+// 	            fillColor: "#C6E2FF",
+// 	            strokeWidth: 2,
+// 	            fillOpacity: 0.5
+// 	          };
+// 	          vectorLayer.addFeatures([cuvreVector]);
+         }
+       },
+       "scope": Marker
+     });
+     //从标记点移出
+    Marker.events.on({
+      "mouseout": function (e) {
+//         $("#Prop_Info").hide();
+      }
+    });
+    
 	markerLayer.addMarker(Marker);
+	
 	
 	if (xh < pointArray.length - 1) {
         setTimeout(function () { LSLJ_DrawPath(xh + 1, pathxh) }, 1000);
 //         setTimeout(LSLJ_DrawPath(xh + 1, pathxh), 1000);
     }
 }
+
+function DrawSector(ArrFQInfo, Point) {
+    vector.removeAllFeatures();
+    var ArrColor = [
+      [0, 90, "#00B00F",0.8, "#00B00F",0.3,"七级风圈半径","东北","lb"],
+      [90, 180, "#00B00F", 0.8, "#00B00F", 0.3, "", "东南", "rb"],
+      [180, 270, "#00B00F", 0.8, "#00B00F", 0.3, "", "西南", "rb"],
+      [270, 360, "#00B00F", 0.8, "#00B00F", 0.3, "", "西北", "lb"],
+      [0, 90, "#F8D500", 0.8, "#F8D500", 0.2, "十级风圈半径", "东北", "lm"],
+      [90, 180, "#F8D500", 0.8, "#F8D500", 0.2, "", "东南", "rm"],
+      [180, 270, "#F8D500", 0.8, "#F8D500", 0.2, "", "西南", "rm"],
+      [270, 360, "#F8D500", 0.8, "#F8D500", 0.2, "", "西北", "lm"],
+      [0, 90, "#FF0000", 0.8, "#FF0000", 0.2, "十二级风圈半径", "东北", "cm"],
+      [90, 180, "#FF0000", 0.8, "#FF0000", 0.2, "", "东南", "cm"],
+      [180, 270, "#FF0000", 0.8, "#FF0000", 0.2, "", "西南", "cm"],
+      [270, 360, "#FF0000", 0.8, "#FF0000", 0.2, "", "西北", "cm"]
+    ];
+    var dwjl = GetDistance(Point.lon, Point.lat, Point.lon + 1, Point.lat);
+    for (var i = 0; i < ArrFQInfo.length; i++) {
+      if (ArrFQInfo[i] != 0) {
+        var origion = new SuperMap.Geometry.Point(Point.lon, Point.lat);
+        var sides = 30;
+        var bj = (parseFloat(ArrFQInfo[i]) * 1000) / dwjl;
+//        ArrColor[i][0]
+        var cuvre = SuperMap.Geometry.Polygon.createRegularPolygonCurve(origion, bj, sides, 90, ArrColor[i][0]);
+        var cuvreVector = new SuperMap.Feature.Vector(cuvre);
+        if (i % 4 != 0) {
+          var XH_0 = Math.floor(i / 4) * 4;
+          var XH_1 = Math.floor(i / 4) * 4 + 1;
+          var XH_2 = Math.floor(i / 4) * 4 + 2;
+          var XH_3 = Math.floor(i / 4) * 4 + 3;
+          if ((ArrFQInfo[XH_0] == ArrFQInfo[XH_1]) && (ArrFQInfo[XH_1] == ArrFQInfo[XH_2]) &&(ArrFQInfo[XH_2] == ArrFQInfo[XH_3])) {
+            cuvreVector.style = {
+              strokeColor: ArrColor[i][2],
+              fillColor: ArrColor[i][4],
+              strokeWidth: 0,
+              fillOpacity: ArrColor[i][5]
+            };
+          }
+          else {
+            cuvreVector.style = {
+              strokeColor: ArrColor[i][2],
+              fillColor: ArrColor[i][4],
+              strokeWidth: 0,
+              fillOpacity: ArrColor[i][5],
+              label: ArrColor[i][6] + "\n" + ArrFQInfo[i].toString() + "km",
+              labelXOffset: 0,
+              labelYOffset: 0,
+              labelAlign: ArrColor[i][8],
+              //fontColor: "#89D624"
+              fontColor: "#FFF0F5"
+            };
+          }
+        }
+        else {
+          cuvreVector.style = {
+            strokeColor: ArrColor[i][2],
+            fillColor: ArrColor[i][4],
+            strokeWidth: 0,
+            fillOpacity: ArrColor[i][5],
+            label: ArrColor[i][6] + "\n" + ArrFQInfo[i].toString() + "km",
+            labelXOffset: 0,
+            labelYOffset: 0,
+            labelAlign: ArrColor[i][8],
+            //fontColor: "#89D624"
+            fontColor: "#FFF0F5"
+          };
+        }
+        vectorLayer.addFeatures([cuvreVector]);
+      }
+    }
+  }
+	//计算两个经纬度坐标之间的距离
+  function GetDistance(lng1, lat1, lng2, lat2) {
+      var EARTH_RADIUS = 6378137;
+      var radLat1 = this.rad(lat1);
+      var radLat2 = this.rad(lat2);
+      var a = radLat1 - radLat2;
+      var b = this.rad(lng1) - this.rad(lng2);
+      var s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
+      s = s * EARTH_RADIUS;
+      s = Math.round(s * 10000) / 10000;
+      return s;
+  }
+  function rad(d) {
+      return d * Math.PI / 180.0;
+  }
 //绘制台风动画
 function TFLJ_DrawFQ(lonlat) {
     // LSTF_DHLayer.clearMarkers();
@@ -374,5 +528,11 @@ function clearFeatures() {
 		<input type="button" class="btn" value="清除" onclick="clearFeatures()" />
 	</div>
 	<div id = "map"></div>
+	<div>
+		<div id="curve" style="display: none;">
+	       <div id="content"></div>
+	    </div>
+	</div>
+	
 </body>
 </html>

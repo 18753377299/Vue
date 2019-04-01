@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title data-i18n="resources.title_themeRange"></title>
+    <style type="text/css">
+        .editPane {
+            position: absolute;
+            right: 60px;
+            top: 50px;
+            text-align: center;
+            background: #FFF;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body style=" margin: 0;overflow: hidden;background: #fff;width: 100%;height:100%;position: absolute;top: 0;">
+<div class='panel panel-primary editPane' id='editPane' style="z-index: 99999">
+    <div class='panel-heading'>
+        <h5 class='panel-title text-center' data-i18n="resources.title_themeRange"></h5>
+    </div>
+    <div class='panel-body' id='params'>
+        <p></p>
+        <div align='right' class='button-group'>
+<!--             <input type='button' id='btn1' class='btn btn-primary' data-i18n="添加专题图" onclick="addThemeRange()"/> -->
+<!--             <input type='button' id='btn2' class='btn btn-primary' data-i18n="[value]resources.text_input_value_clear" onclick="removeTheme()"/> -->
+        </div>
+    </div>
+</div>
+
+<div id="map" style="margin:0 auto;width: 100%;height: 100%"></div>
+<!-- <script type="text/javascript" include="bootstrap,widgets.alert" src="../js/include-web.js"></script> -->
+<!-- <script type="text/javascript" exclude="iclient-classic" src="../../dist/classic/include-classic.js"></script> -->
+<script src='../../libs/SuperMap.Include.js'></script>
+<script src='../../libs/iclient-classic.js'></script>
+<script type="text/javascript">
+    var map, baseLayer, themeLayer,cityLayer,countyLayer,tianlayer,
+    	style1,style2,style3,style4,style5,
+        host = window.isLocal ? window.server : "http://support.supermap.com.cn:8090",
+//         url = host + "/iserver/services/map-china400/rest/maps/China";
+    	urlTian="http://10.10.2.241:8091/iserver/services/map-tianditu/rest/maps/矢量中文注记_经纬度",
+    	url = "http://10.10.2.241:8091/iserver/services/map-chinaZT/rest/maps/china_province_all@chinaZT";
+    map = new SuperMap.Map("map", {
+        controls: [
+            new SuperMap.Control.LayerSwitcher(),
+            new SuperMap.Control.ScaleLine(),
+            new SuperMap.Control.Zoom(),
+            new SuperMap.Control.Navigation({
+                dragPanOptions: {
+                    enableKinetic: true
+                }
+            })]
+    });
+    baseLayer = new SuperMap.Layer.TiledDynamicRESTLayer("china_province_all@chinaZT", url, {
+        transparent: true,
+        cacheEnabled: true,isBaseLayer:true
+    }, {maxResolution: "auto"});
+    baseLayer.events.on({"layerInitialized": addLayer});
+
+    function addLayer() {
+//     	tianlayer = new SuperMap.Layer.TiledDynamicRESTLayer("矢量中文注记_经纬度", urlTian, {
+//             transparent: true, cacheEnabled: true,isBaseLayer:true
+//             }, {maxResolution: "auto"});
+        
+//     	tianlayer.events.on({"layerInitialized": addLayer2});
+   	 map.addLayer(baseLayer);
+// 	 map.addLayers([baseLayer,tianlayer]);
+     map.setCenter(new SuperMap.LonLat(116, 39), 4);
+     map.allOverlays = true;
+//      changeMap();
+     addThemeRange();
+    }
+//     function addLayer2(){
+// //     	 map.addLayer(baseLayer);
+//     	 map.addLayers([baseLayer,tianlayer]);
+//          map.setCenter(new SuperMap.LonLat(116, 39), 4);
+//          map.allOverlays = true;
+//     }
+    
+    function addThemeRange() {
+    	addThemeCityRange();
+//     	changeMap();
+        console.log("begin");
+        removeTheme();
+        var themeService = new SuperMap.REST.ThemeService(url, {
+                eventListeners: {
+                    "processCompleted": themeCompleted,
+                    "processFailed": themeFailed
+                }
+            }),
+            style1 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(254, 238, 223),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),
+            style2 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(253 ,211, 174),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),
+            style3 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(253, 186, 129),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),
+            style4 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(253, 166, 102),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),
+            style5 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(250, 144, 73),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),
+            style6 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(242, 117, 41),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),          
+            style7 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(236, 100 ,21),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),
+            style8 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(231, 87, 9),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),
+            style9 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(225, 79, 4),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),
+            style10 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(219 ,72, 0),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),
+            themeRangeIteme1 = new SuperMap.REST.ThemeRangeItem({
+                 start: 0,
+                end: 15000,
+                style: style1
+            }),
+            themeRangeIteme2 = new SuperMap.REST.ThemeRangeItem({
+                start: 15000,
+                end: 30000,
+                style: style2
+            }),
+            themeRangeIteme3 = new SuperMap.REST.ThemeRangeItem({
+                start: 30000,
+                end: 45000,
+                style: style3
+            }),
+            themeRangeIteme4 = new SuperMap.REST.ThemeRangeItem({
+                start: 45000,
+                end: 60000,
+                style: style4
+            }),
+            themeRangeIteme5 = new SuperMap.REST.ThemeRangeItem({
+                start: 60000,
+               end: 75000,
+               style: style5
+           }),
+           themeRangeIteme6 = new SuperMap.REST.ThemeRangeItem({
+               start: 75000,
+               end: 90000,
+               style: style6
+           }),
+           themeRangeIteme7 = new SuperMap.REST.ThemeRangeItem({
+               start: 90000,
+               end: 105000,
+               style: style7
+           }),
+           themeRangeIteme8 = new SuperMap.REST.ThemeRangeItem({
+               start: 105000,
+               end: 120000,
+               style: style8
+           }),
+           themeRangeIteme9 = new SuperMap.REST.ThemeRangeItem({
+               start: 120000,
+               end: 135000,
+               style: style9
+           }),
+           themeRangeIteme10 = new SuperMap.REST.ThemeRangeItem({
+               start: 135000,
+               end: 150000,
+               style: style10
+           }),
+            themeRange = new SuperMap.REST.ThemeRange({
+                rangeExpression: "SmGeometrySize",
+                rangeMode: SuperMap.REST.RangeMode.EQUALINTERVAL,
+                items: [themeRangeIteme1, themeRangeIteme2, themeRangeIteme3,themeRangeIteme4, 
+                        		 themeRangeIteme5, themeRangeIteme6,themeRangeIteme7,
+                        		 themeRangeIteme8, themeRangeIteme9,themeRangeIteme10]
+            }),
+            themeParameters = new SuperMap.REST.ThemeParameters({
+//                 datasetNames: ["China_Province_pg"],
+//                 dataSourceNames: ["China"],
+//                 joinItems: null,
+//                 themes: [themeRange],
+//                 types: ['REGION']
+	            datasetNames: ["china_province"],
+	            dataSourceNames: ["chinaZT"],
+	            joinItems: null,
+	            themes: [themeRange],
+	            types: ['REGION']
+            });
+
+        themeService.processAsync(themeParameters);
+    }
+
+    function themeCompleted(themeEventArgs) {        
+        if (themeEventArgs.result.resourceInfo.id) {
+        	console.log("getin--success:"+map.getScale());
+            themeLayer = new SuperMap.Layer.TiledDynamicRESTLayer("中国各省面积_分段专题图", url, {
+                cacheEnabled: false,
+                transparent: true,
+                layersID: themeEventArgs.result.resourceInfo.id
+            }
+//             , {"scales":[1/100000000, 1/1000000]}
+				//正确
+            	,{"minScale":1/100000000,"maxScale":1/10000000}
+            );
+//             themeLayer.setOpacity(0.5);
+            // 图层基础样式
+//             themeLayer.style = {
+//                 shadowBlur: 3,
+//                 shadowColor: "#000000",
+//                 shadowOffsetX: 1,
+//                 shadowOffsetY: 1,
+//                 fillColor: "#FFFFFF"
+//             };
+
+            // 开启 hover 高亮效果
+//             themeLayer.isHoverAble = true;
+
+//             // hover 高亮样式
+//             themeLayer.highlightStyle = {
+//                 stroke: true,
+//                 strokeWidth: 2,
+//                 strokeColor: 'blue',
+//                 fillColor: "#00F5FF",
+//                 fillOpacity: 0.2
+//             };
+                                
+            themeLayer.events.on({"layerInitialized": addThemelayer});
+            //专题图层 mousemove 事件
+            themeLayer.events.on("mousemove", jumpMap);
+        }else {
+			alert('123');		
+        }
+    }
+    function jumpMap(event){
+		console.log(event);
+ 	}
+    function addThemelayer() {
+        map.addLayer(themeLayer);
+    }
+    function themeFailed(serviceFailedEventArgs) {
+        //doMapAlert("",serviceFailedEventArgs.error.errorMsg,true);
+        widgets.alert.showAlert(serviceFailedEventArgs.error.errorMsg,false);
+    }
+    function removeTheme() {
+        if (map.layers.length > 1) {
+            map.removeLayer(themeLayer, true);
+        }
+    }
+    function addThemeCityRange(){
+    	console.log("beginCity");
+		removeThemeCity();
+        var themeService = new SuperMap.REST.ThemeService(url, {
+                eventListeners: {
+                    "processCompleted": themeCityCompleted,
+                    "processFailed": themeFailed
+                }
+            }),
+            style1 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(254, 238, 223),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),
+            style2 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(253 ,211, 174),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),
+            style3 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(253, 186, 129),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),
+            style4 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(253, 166, 102),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),
+            style5 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(250, 144, 73),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),
+            style6 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(242, 117, 41),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),          
+            style7 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(236, 100 ,21),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),
+            style8 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(231, 87, 9),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),
+            style9 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(225, 79, 4),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),
+            style10 = new SuperMap.REST.ServerStyle({
+                fillForeColor: new SuperMap.REST.ServerColor(219 ,72, 0),
+                lineColor: new SuperMap.REST.ServerColor(245 ,255, 250),
+                lineWidth: 0.1
+            }),
+            themeRangeIteme1 = new SuperMap.REST.ThemeRangeItem({
+                 start: 0,
+                end: 15000,
+                style: style1
+            }),
+            themeRangeIteme2 = new SuperMap.REST.ThemeRangeItem({
+                start: 15000,
+                end: 30000,
+                style: style2
+            }),
+            themeRangeIteme3 = new SuperMap.REST.ThemeRangeItem({
+                start: 30000,
+                end: 45000,
+                style: style3
+            }),
+            themeRangeIteme4 = new SuperMap.REST.ThemeRangeItem({
+                start: 45000,
+                end: 60000,
+                style: style4
+            }),
+            themeRangeIteme5 = new SuperMap.REST.ThemeRangeItem({
+                start: 60000,
+               end: 75000,
+               style: style5
+           }),
+           themeRangeIteme6 = new SuperMap.REST.ThemeRangeItem({
+               start: 75000,
+               end: 90000,
+               style: style6
+           }),
+           themeRangeIteme7 = new SuperMap.REST.ThemeRangeItem({
+               start: 90000,
+               end: 105000,
+               style: style7
+           }),
+           themeRangeIteme8 = new SuperMap.REST.ThemeRangeItem({
+               start: 105000,
+               end: 120000,
+               style: style8
+           }),
+           themeRangeIteme9 = new SuperMap.REST.ThemeRangeItem({
+               start: 120000,
+               end: 135000,
+               style: style9
+           }),
+           themeRangeIteme10 = new SuperMap.REST.ThemeRangeItem({
+               start: 135000,
+               end: 150000,
+               style: style10
+           }),
+            themeRange = new SuperMap.REST.ThemeRange({
+                rangeExpression: "SmGeometrySize",
+                rangeMode: SuperMap.REST.RangeMode.EQUALINTERVAL,
+                items: [themeRangeIteme1, themeRangeIteme2, themeRangeIteme3,themeRangeIteme4, 
+               		 themeRangeIteme5, themeRangeIteme6,themeRangeIteme7,
+            		 themeRangeIteme8, themeRangeIteme9,themeRangeIteme10]
+            }),
+            themeParameters = new SuperMap.REST.ThemeParameters({
+//                 datasetNames: ["China_Province_pg"],
+//                 dataSourceNames: ["China"],
+//                 joinItems: null,
+//                 themes: [themeRange],
+//                 types: ['REGION']
+	            datasetNames: ["china_city"],
+	            dataSourceNames: ["chinaZT"],
+	            joinItems: null,
+	            themes: [themeRange],
+	            types: ['REGION']
+            });
+
+        themeService.processAsync(themeParameters);
+    }
+    function themeCityCompleted(themeEventArgs) {        
+        if (themeEventArgs.result.resourceInfo.id) {
+        	console.log("getin-city-success:"+map.getScale());
+        	cityLayer = new SuperMap.Layer.TiledDynamicRESTLayer("中国各市面积_分段专题图", url, {
+                cacheEnabled: false,
+                transparent: true,
+                layersID: themeEventArgs.result.resourceInfo.id
+            }
+			//正确
+           	,{"minScale":1/10000000,"maxScale":1/1000000}
+            );
+//         	cityLayer.setOpacity(0.5);
+        	cityLayer.events.on({"layerInitialized": addThemeCitylayer});
+            
+        }else {
+			alert('123');		
+        }
+    }
+    
+    function addThemeCitylayer() {
+        map.addLayer(cityLayer);
+    }
+ 
+    function removeThemeCity() {
+        if (map.layers.length > 1) {
+            map.removeLayer(cityLayer, true);
+        }
+    }
+    function changeMap(){
+    	tianlayer = new SuperMap.Layer.TiledDynamicRESTLayer("矢量中文注记_经纬度", urlTian, {
+            transparent: true,
+            cacheEnabled: true
+          });
+    	tianlayer.events.on({
+            "layerInitialized": function (evt) {
+              map.addLayers([tianlayer]);
+              // 地图初始的透明度和进度条的表示长度
+//               tianlayer.setOpacity(0.5);
+            }
+          })
+    }
+
+</script>
+</body>
+</html>

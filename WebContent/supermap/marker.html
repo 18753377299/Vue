@@ -21,7 +21,8 @@ border:1px solid #3473b7;
 <script type="text/javascript">
 var host = document.location.toString().match(/file:\/\//)?"http://localhost:8090":'http://' + document.location.host;
 var map, layerWorld, marker, markers, framedCloud;
-var url=host+"/iserver/services/map-world/rest/maps/World";
+// var url=host+"/iserver/services/map-world/rest/maps/World";
+var url="http://10.10.2.241:8090/iserver/services/map-world/rest/maps/World";
 
 function init(){
 	vectorLayer = new SuperMap.Layer.Vector("Vector Layer");
@@ -53,13 +54,21 @@ function init(){
 	markers.addMarker(marker);
 	//注册 click 事件,触发 mouseClickHandler()方法
 	marker.events.on({"click":mouseClickHandler,
+		"scope": {"abc":"123"},
+// 		 scope: object,
 	"touchstart":mouseClickHandler //假如要在移动端的浏览器也实现点击弹框，则在注册touch类事件
-	});
-	
+	});	
 }
 var infowin = null;
 	//定义mouseClickHandler函数，触发click事件会调用此函数
 function mouseClickHandler(event){ 
+	 var marker1 = this;
+	 console.log(marker1);
+	console.log(event);
+	var json =new SuperMap.Format.GeoJSON().write(event.object,false);
+	json = JSON.parse(json);
+    console.log(json);
+    
 	closeInfoWin();
 	
 	var contentHTML = "<div style='width:80px; font-size:12px;font-weight:bold ; opacity: 0.8'>"; 

@@ -33,7 +33,8 @@ fillColor: "#304DBE",
 fillOpacity: 0.5
 },
 host = document.location.toString().match(/file:\/\//)?"http://localhost:8090":'http://' + document.location.host,
-url=host+"/iserver/services/map-world/rest/maps/World";
+// url=host+"/iserver/services/map-world/rest/maps/World";
+url="http://10.10.2.241:8090/iserver/services/map-world/rest/maps/World";
 function init(){
 layer = new SuperMap.Layer.TiledDynamicRESTLayer("World", url, {transparent: true, cacheEnabled: true}, {maxResolution:"auto"});
 layer.events.on({"layerInitialized":addLayer});
@@ -122,7 +123,10 @@ function drawCompleted(drawGeometryArgs) {
 	vectorLayer.addFeatures(feature);
 
 	var queryParam, queryByGeometryParameters, queryService;
-	queryParam = new SuperMap.REST.FilterParameter({name: "Capitals@World.1"});
+	queryParam = new SuperMap.REST.FilterParameter({
+		name: "Capitals@World.1",
+		fields:["count(*) as count"]
+		});
 	queryByGeometryParameters = new SuperMap.REST.QueryByGeometryParameters({
 	queryParams: [queryParam],
 	geometry: drawGeometryArgs.feature.geometry,
@@ -181,6 +185,7 @@ queryService.processAsync(queryByBoundsParams);//向服务端传递参数，然�
 }
 
 function processCompleted(queryEventArgs) {
+	
 	console.log(queryEventArgs);
 	
 	drawPolygon1.deactivate();
