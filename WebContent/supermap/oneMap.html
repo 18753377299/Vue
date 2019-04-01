@@ -143,6 +143,7 @@ function LSLJ_DrawPath(xh,pathxh){
         	console.log(e)
 //         var Info = marker.Data;
 //         console.log(_selfMarker);
+		 // ArrFQInfo 中十二个数据 表示  7/10/12 级风在不同的方位的风圈半径。
          var Info= {"bj_7":"100-180公里",
            "bj_10": "", "bj_12": "", "fs": 18,"lat": marker.lonlat.lat,"lon": marker.lonlat.lon, "sj": "2018-05-03 20:00","zxqy": 998,
            "ArrFQInfo":[180, 100, 100, 180, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -212,10 +213,12 @@ function LSLJ_DrawPath(xh,pathxh){
 function DrawSector(ArrFQInfo, Point) {
     vector.removeAllFeatures();
     var ArrColor = [
+                    
       [0, 90, "#00B00F",0.8, "#00B00F",0.3,"七级风圈半径","东北","lb"],
       [90, 180, "#00B00F", 0.8, "#00B00F", 0.3, "", "东南", "rb"],
       [180, 270, "#00B00F", 0.8, "#00B00F", 0.3, "", "西南", "rb"],
       [270, 360, "#00B00F", 0.8, "#00B00F", 0.3, "", "西北", "lb"],
+      
       [0, 90, "#F8D500", 0.8, "#F8D500", 0.2, "十级风圈半径", "东北", "lm"],
       [90, 180, "#F8D500", 0.8, "#F8D500", 0.2, "", "东南", "rm"],
       [180, 270, "#F8D500", 0.8, "#F8D500", 0.2, "", "西南", "rm"],
@@ -225,11 +228,13 @@ function DrawSector(ArrFQInfo, Point) {
       [180, 270, "#FF0000", 0.8, "#FF0000", 0.2, "", "西南", "cm"],
       [270, 360, "#FF0000", 0.8, "#FF0000", 0.2, "", "西北", "cm"]
     ];
+    //相差一个经度和一个纬度之间的距离
     var dwjl = GetDistance(Point.lon, Point.lat, Point.lon + 1, Point.lat);
     for (var i = 0; i < ArrFQInfo.length; i++) {
       if (ArrFQInfo[i] != 0) {
         var origion = new SuperMap.Geometry.Point(Point.lon, Point.lat);
         var sides = 30;
+//         	半径
         var bj = (parseFloat(ArrFQInfo[i]) * 1000) / dwjl;
 //        ArrColor[i][0]
         var cuvre = SuperMap.Geometry.Polygon.createRegularPolygonCurve(origion, bj, sides, 90, ArrColor[i][0]);
@@ -276,7 +281,12 @@ function DrawSector(ArrFQInfo, Point) {
             fontColor: "#FFF0F5"
           };
         }
+        console.log("cuvreVector图层");
+        console.log(cuvreVector);
         vectorLayer.addFeatures([cuvreVector]);
+		// 图层
+		console.log("vectorLayer图层");
+        console.log(vectorLayer);
       }
     }
   }
