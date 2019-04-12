@@ -46,13 +46,13 @@ function init(){
 	//为图层初始化完毕添加addLayer()事件
 	layer.events.on({"layerInitialized":addLayer});
 	map = new SuperMap.Map("map",{controls: [
-	new SuperMap.Control.LayerSwitcher(),
-	new SuperMap.Control.OverviewMap(),
-	new SuperMap.Control.ScaleLine(),
-	new SuperMap.Control.Zoom(),
-	new SuperMap.Control.Navigation({
-	dragPanOptions: {
-	enableKinetic: true
+		new SuperMap.Control.LayerSwitcher(),
+		new SuperMap.Control.OverviewMap(),
+		new SuperMap.Control.ScaleLine(),
+		new SuperMap.Control.Zoom(),
+		new SuperMap.Control.Navigation({
+		dragPanOptions: {
+		enableKinetic: true
 	}})
 	]
 	});
@@ -66,14 +66,14 @@ function addLayer() {
 
 //移除整个图层要素
 function clearAllFeatures(){
-markerLayer.clearMarkers();
-if(map.popups.length != 0){
-var i = 0,lengthPopup = map.popups.length;
-while(i < lengthPopup){
-map.removePopup(map.popups[0]);
-i++;
-}
-}
+	markerLayer.clearMarkers();
+	if(map.popups.length != 0){
+		var i = 0,lengthPopup = map.popups.length;
+		while(i < lengthPopup){
+			map.removePopup(map.popups[0]);
+			i++;
+		}
+	}
 }
 
 /**
