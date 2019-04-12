@@ -30,7 +30,6 @@ public class SsytemArrayCopy {
 		
 	}
 	
-	
 }
 
 class User{
