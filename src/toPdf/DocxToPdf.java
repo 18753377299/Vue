@@ -13,8 +13,8 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 public class DocxToPdf {
 	public static void main(String argv[]) {
         try {
-        	String docxFilePath="D:/wordTest1.doc";
-        	String pdfFilePath="D:/Spring1.pdf"; 
+        	String docxFilePath="F:/riskcontrol/riskcontrol_file/downloadFile/abc.doc";
+        	String pdfFilePath="F:/riskcontrol/riskcontrol_file/downloadFile/Spring12.pdf"; 
         	convertPdf(docxFilePath, pdfFilePath);
         } catch (Exception e) {
             e.printStackTrace();

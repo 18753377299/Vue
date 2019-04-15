@@ -62,7 +62,10 @@ public class WordToPdf {
     public static void main(String[] args) {
         WordToPdf d = new WordToPdf();
 //        d.wordToPDF("C:/Users/lqk/Desktop/aaaa.doc", "D:/Spring.pdf");
-        d.wordToPDF("D:/wordTest1.doc", "D:/Spring.pdf");
+//        d.wordToPDF("D:/wordTest1.doc", "D:/Spring.pdf");
+        d.wordToPDF("F:/riskcontrol/riskcontrol_file/downloadFile/RCJBX00200002019000014_A000011533.doc",
+        		"F:/riskcontrol/riskcontrol_file/downloadFile/Spring.pdf");
+        
     }
 
 }

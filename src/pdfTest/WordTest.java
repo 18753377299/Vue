@@ -12,15 +12,17 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import sun.misc.BASE64Encoder;
 import freemarker.template.Configuration;
@@ -123,6 +125,34 @@ public class WordTest {
         BASE64Encoder  endcoder=new sun.misc.BASE64Encoder();
         return endcoder.encode(data);
     }
+    /**
+     * 生成PDF到文件
+     * @param ftlPath 模板文件路径（不含文件名）
+     * @param ftlName 模板文件吗（不含路径）
+     * @param imageDiskPath 图片的磁盘路径
+     * @param data 数据
+     * @param outputFile 目标文件（全路径名称）
+     * @throws Exception
+     */
+    public static void generateToFile(String ftlPath,String ftlName,String imageDiskPath,
+    		Object data,String outputFile) throws Exception {
+        String html=PdfHelper.getPdfContent(ftlPath, ftlName, data);
+        OutputStream out = null;
+        ITextRenderer render = null;
+        out = new FileOutputStream(outputFile);
+        render = PdfHelper.getRender();
+        render.setDocumentFromString(html);
+        if(imageDiskPath!=null&&!imageDiskPath.equals("")){
+            //html中如果有图片，图片的路径则使用这里设置的路径的相对路径，这个是作为根路径
+            render.getSharedContext().setBaseURL("file:/"+imageDiskPath);
+        }
+        render.layout();
+        render.createPDF(out);
+        render.finishPDF();
+        render = null;
+        out.close();
+    }
+
 
    
 }
