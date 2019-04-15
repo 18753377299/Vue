@@ -7,6 +7,10 @@ import com.jacob.com.ComThread;
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
 
+
+
+
+
 /**
  * 效果最好的一种方法，但是需要 window 环境，而且速度是最慢的需要安装 msofficeWord 以及 SaveAsPDFandXPS.exe (
  * word 的一个插件，用来把 word 转化为 pdf，可以不用安装，本次未安装测试通过 )
@@ -62,9 +66,10 @@ public class WordToPdf {
     public static void main(String[] args) {
         WordToPdf d = new WordToPdf();
 //        d.wordToPDF("C:/Users/lqk/Desktop/aaaa.doc", "D:/Spring.pdf");
-//        d.wordToPDF("D:/wordTest1.doc", "D:/Spring.pdf");
-        d.wordToPDF("F:/riskcontrol/riskcontrol_file/downloadFile/RCJBX00200002019000014_A000011533.doc",
-        		"F:/riskcontrol/riskcontrol_file/downloadFile/Spring.pdf");
+        d.wordToPDF("F:/riskcontrol/riskcontrol_file/downloadFle/abc.doc",
+        			"F:/riskcontrol/riskcontrol_file/downloadFile/abc.pdf");
+//        d.wordToPDF("F:/riskcontrol/riskcontrol_file/downloadFile/RCJBX00200002019000014_A000011533.doc",
+//        		"F:/riskcontrol/riskcontrol_file/downloadFile/Spring.pdf");
         
     }
 

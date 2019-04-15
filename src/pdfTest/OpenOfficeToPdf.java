@@ -15,8 +15,8 @@ import com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConv
 public class OpenOfficeToPdf {
 	public static void main(String []args){
 		try {
-            String sourceFile = "F:/riskcontrol/riskcontrol_file/downloadFile/RCJBX00200002019000014_A000011533.doc";
-            String destFile="F:/riskcontrol/riskcontrol_file/downloadFile/Spring1.pdf";
+            String sourceFile = "F:/riskcontrol/riskcontrol_file/downloadFile/Spring444.doc";
+            String destFile="F:/riskcontrol/riskcontrol_file/downloadFile/Spring2.pdf";
             
 //            String sourceFile = "/home/openoffice/aaaaa.doc";
 //            String destFile="/home/openoffice/Spring.pdf";
