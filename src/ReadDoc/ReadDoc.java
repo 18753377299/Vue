@@ -26,17 +26,17 @@ public class ReadDoc {
         InputStream is = new FileInputStream(path);
         HWPFDocument doc = new HWPFDocument(is);
         //输出书签信息
-        this.printInfo(doc.getBookmarks());
-        //输出文本
-        System.out.println(doc.getDocumentText());
-        Range range = doc.getRange();
-        this.printInfo(range);
-        //读表格
-        this.readTable(range);
-        //读列表
-        this.readList(range);
+//        this.printInfo(doc.getBookmarks());
+//        //输出文本
+//        System.out.println(doc.getDocumentText());
+//        Range range = doc.getRange();
+//        this.printInfo(range);
+//        //读表格
+//        this.readTable(range);
+//        //读列表
+//        this.readList(range);
         //把当前HWPFDocument写到输出流中
-        String target="F:/riskcontrol/riskcontrol_file/downloadFile/aaaaa_1.doc";
+        String target="F:/riskcontrol/riskcontrol_file/downloadFile/aaaaa_2.doc";
         doc.write(new FileOutputStream(target));
 //        doc.write(new FileOutputStream("D:\\test.doc"));
         is.close();

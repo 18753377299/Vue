@@ -22,6 +22,7 @@ import pdfTest.WordTest;
 import sun.misc.BASE64Encoder;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 	/**
  * @author  作者 E-mail: 
  * @date 创建时间：2019年4月15日 下午8:17:50
@@ -40,7 +41,28 @@ public class WordDocxTest {
    public static void main(String[] args) {
        WordTest test = new WordTest();
        
-       test.createWord();       
+//       test.createWord();   
+       /**
+       *
+       *  @param xmlTemplate xml的文件名
+       *  @param docxTemplate docx的路径和文件名
+       * @param xmlTemp  填充完数据的临时xml
+       * @param toFilePath  目标文件名
+       * @param map  需要动态传入的数据
+       * @throws IOException
+       * @throws TemplateException
+       */
+       Map<String, Object> dataMap = new HashMap<String, Object>();
+       User user =new User();
+       user.setName("张三");
+       user.setInfo("123");
+       dataMap.put("user", user);
+//       String xmlTemplate ="F:/eclipse/Vue/src/template/docx/document.xml";
+       String xmlTemplate ="document.xml";
+       String docxTemplate="F:/eclipse/Vue/src/template/docx/abc.docx";
+       String xmlTemp="F:/eclipse/Vue/src/template/docx/documentTemp.xml";
+       String toFilePath="F:/eclipse/Vue/src/template/docx/abcDE.docx";
+       XmlToDocx.toDocx(xmlTemplate, docxTemplate, xmlTemp, toFilePath, dataMap);
    }
    
    public void createWord() {

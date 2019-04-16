@@ -22,7 +22,9 @@ public class XmlTplUtil {
             String path = pathName.substring(1, pathName.lastIndexOf("/"));
             String parentPath1 = new File(path).getParent();//获取项目的上一级目录
             String parentPath2 = new File(parentPath1).getParent();//获取项目的上一级目录
-            String xmlPath = parentPath2 + "/static/excelModel";
+//            String xmlPath = parentPath2 + "/static/excelModel";
+//            String xmlPath = parentPath2 + "/static/excelModel";
+            String xmlPath = "F:/eclipse/Vue/src/template/docx";
             cfg.setDirectoryForTemplateLoading(new File(xmlPath));
         } catch (Exception e) {
             e.printStackTrace();
