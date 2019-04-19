@@ -14,5 +14,7 @@ public class ReadDocTest {
         ReadDoc rd = new ReadDoc();
 //        rd.testReadByDoc("D:\\template.doc");
         rd.testReadByDoc(soureString);
+        
+        
     }
 }

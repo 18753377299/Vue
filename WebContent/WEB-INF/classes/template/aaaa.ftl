@@ -686,7 +686,7 @@
 									<w:rPr>
 										<w:rFonts w:hint="fareast" />
 									</w:rPr>
-									<w:t>${user.name}中${sb?string("0.0000")}</w:t>
+									<w:t><![CDATA[ ${user.name} ]]>中${sb?string("0.0000")}<#if (special)??><![CDATA[ ${special} ]]> </#if></w:t>
 								</w:r>
 							</w:p>
 						</w:tc>

@@ -61,10 +61,12 @@ public class DocFmtConvert {
 //		String srcDocPath = "E://test.docx";
 //		String descDocPath = "E://test.doc";
 		
-		String srcDocPath = "F:/riskcontrol/riskcontrol_file/RCJBX00200002019000014_A000011533.docx";
-		String descDocPath = "F:/riskcontrol/riskcontrol_file/RCJBX00200002019000014_A000011533.doc";
+		String srcDocPath = "F:/riskcontrol/riskcontrol_file/downloadFile/RCJBX00200002019000014_A000011533.docx";
+		String descDocPath = "F:/riskcontrol/riskcontrol_file/downloadFile/RCJBX00200002019000014_A000011533.doc";
 		try {
-			dfc.convertDocFmt(srcDocPath, descDocPath, DOC_FMT);
+//			dfc.convertDocFmt(srcDocPath, descDocPath, DOC_FMT);
+			dfc.convertDocFmt(descDocPath, srcDocPath, DOCX_FMT);
+			System.out.println("=====success====");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

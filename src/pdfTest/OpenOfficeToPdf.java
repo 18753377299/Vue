@@ -2,9 +2,6 @@ package pdfTest;
 
 import java.io.File;
 
-import com.artofsolving.jodconverter.openoffice.connection.SocketOpenOfficeConnection;
-import com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConverter;
-
 	/**
  * @author  作者 E-mail: 
  * @date 创建时间：2019年4月15日 下午4:08:06
@@ -15,9 +12,9 @@ import com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConv
 public class OpenOfficeToPdf {
 	public static void main(String []args){
 		try {
-            String sourceFile = "F:/riskcontrol/riskcontrol_file/RCJBX00200002019000014_A000011533.docx";
-//            String sourceFile = "F:/riskcontrol/riskcontrol_file/downloadFile/eee.docx";
-            String destFile="F:/riskcontrol/riskcontrol_file/Spring5.pdf";
+//           String sourceFile = "F:/riskcontrol/riskcontrol_file/downloadFile/RCJBX00200002019000014_A000011533.docx";
+            String sourceFile = "F:/RCJBX00200002019000014_A000011533.docx";
+            String destFile="F:/riskcontrol/riskcontrol_file/downloadFile/Spring1.pdf";
             
 //            String sourceFile = "/home/openoffice/aaaaa.doc";
 //            String destFile="/home/openoffice/Spring.pdf";
@@ -38,6 +35,8 @@ public class OpenOfficeToPdf {
 
             //covert
             OpenOfficeDocumentConverter converter = new OpenOfficeDocumentConverter(connection);
+            
+//          DocumentConverter converter = new StreamOpenOfficeDocumentConverter(connection);
             converter.convert(inputFile, outputFile);
             //关闭连接
             connection.disconnect();

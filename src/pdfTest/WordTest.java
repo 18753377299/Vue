@@ -55,7 +55,7 @@ public class WordTest {
 //        	Image image=new Image();
         	for(int i=0;i<2;i++){
         		User user =new User();
-        		user.setName("  ");
+        		user.setName("（若计值>=1且<40)");
         		users.add(user);
         		
 //        		Image image=new Image();
@@ -81,16 +81,19 @@ public class WordTest {
 	       	 DateFormat df1 = null ;     // 声明一个DateFormat  
 	         DateFormat df2 = null ;     // 声明一个DateFormat  
 	         df1 = DateFormat.getDateInstance(DateFormat.YEAR_FIELD,new Locale("zh","CN")) ;
+	         User user =new User();
+	         user.setName("（若计值>=1且<40)");
 //	        dataMap.put("sb",  df1.format(new Date()));
 	        dataMap.put("sb",  123.343434000);
 	        dataMap.put("users", users);
 //        	dataMap.put("image", getImageStr());
         	dataMap.put("images", images);
-        	
+        	dataMap.put("user", user);
 //        	dataMap.put("image", null);
 //        	dataMap.put("image", "");
             dataMap.put("name", name);
             dataMap.put("sex", "男&le;女&ge;");
+            dataMap.put("special", "（若计值>=1且<40)");
         	java.net.URL url=WordTest.class.getClassLoader().getResource("/");
         	java.net.URL url2=WordTest.class.getClassLoader().getResource("/aaaa.ftl");
         	System.out.println("url="+url+";url2="+url2);

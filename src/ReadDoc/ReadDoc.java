@@ -36,7 +36,7 @@ public class ReadDoc {
 //        //读列表
 //        this.readList(range);
         //把当前HWPFDocument写到输出流中
-        String target="F:/riskcontrol/riskcontrol_file/downloadFile/aaaaa_2.doc";
+        String target="F:/riskcontrol/riskcontrol_file/downloadFile/aaaaa_2.docx";
         doc.write(new FileOutputStream(target));
 //        doc.write(new FileOutputStream("D:\\test.doc"));
         is.close();
