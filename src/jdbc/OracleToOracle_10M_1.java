@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * @since  把oracle中地图数据插入到另一个oracle数据库中
  * @return  */
 
-public class OracleToOracle {
+public class OracleToOracle_10M_1 {
 	public static void main(String [] args){
 		Connection connect = null;
 //        Statement statement = null;
@@ -33,7 +33,7 @@ public class OracleToOracle {
            
            //第二步：获取连接
            //第一种方式：利用DriverManager（常用）
-           connect = DriverManager.getConnection("jdbc:oracle:thin:@10.10.68.248:1521:orcl", "riskcontrol_freeze", "riskcontrol_freeze");
+           connect = DriverManager.getConnection("jdbc:oracle:thin:@10.133.174.52:1521:fxdb", "spider", "spider");
 
            //第二种方式：直接使用Driver
 //           Properties pro = new Properties();
@@ -50,7 +50,7 @@ public class OracleToOracle {
 //           statement = connect.createStatement();
 
            //第二种方式：PreStatement
-           String sql = "select * from SMDTV_45 where SMID=6";
+           String sql = "select * from TF_10M where TFBH=201822";
 //           PreparedStatement preState = connect.prepareStatement("select  * from tb1_dept where id = ?");
            preState = connect.prepareStatement(sql);
 
@@ -82,23 +82,13 @@ public class OracleToOracle {
                Integer  SMLIBTILEID = resultSet.getInt("SMLIBTILEID");
                BigDecimal SMAREA = new BigDecimal(resultSet.getString("SMAREA"));
                BigDecimal SMPERIMETER = new BigDecimal(resultSet.getString("SMPERIMETER"));
-               Integer  FIELD_SMUSERID = resultSet.getInt("FIELD_SMUSERID");
-               String  ADMINCODE = resultSet.getString("ADMINCODE");
-               String  KIND = resultSet.getString("KIND");
-               String  NAME = resultSet.getString("NAME");
-               String  PY = resultSet.getString("PY");
-               String  CITYADCODE = resultSet.getString("CITYADCODE");
-               String  PROADCODE = resultSet.getString("PROADCODE");
-               BigDecimal CENTERX = new BigDecimal(resultSet.getString("CENTERX"));
-               BigDecimal CENTERY = new BigDecimal(resultSet.getString("CENTERY"));
-               BigDecimal LEVELFLAG = new BigDecimal(resultSet.getString("LEVELFLAG"));
-               String  PROVINCENAME = resultSet.getString("PROVINCENAME");
-               String  CITYNAME = resultSet.getString("CITYNAME");
+              
+               Integer  PID = resultSet.getInt("PID");
+               String  TFBH = resultSet.getString("TFBH");
                
                System.out.println(SMID+"   "+SMKEY+"   "+SMSDRIW);  //打印输出结果集
-               OracleToOracle.insertData(SMID,SMKEY,SMSDRIW,SMSDRIN,SMSDRIE,SMSDRIS,SMGRANULE,SMGEOMETRY,
-            		   SMUSERID,SMLIBTILEID,SMAREA,SMPERIMETER,FIELD_SMUSERID,ADMINCODE,KIND,NAME,PY,CITYADCODE,
-            		   PROADCODE,CENTERX,CENTERY,LEVELFLAG,PROVINCENAME,CITYNAME);
+               OracleToOracle_10M_1.insertData(SMID,SMKEY,SMSDRIW,SMSDRIN,SMSDRIE,SMSDRIS,SMGRANULE,SMGEOMETRY,
+            		   SMUSERID,SMLIBTILEID,SMAREA,SMPERIMETER,PID,TFBH);
            }
        } catch (Exception e) {
            e.printStackTrace();
@@ -119,19 +109,17 @@ public class OracleToOracle {
 //	public static void insertData (Integer SMID,Integer SMKEY,BigDecimal SMSDRIW ,byte[] SMGEOMETRY){
 	public static void 	insertData(Integer SMID,Integer SMKEY,BigDecimal SMSDRIW,BigDecimal SMSDRIN,BigDecimal SMSDRIE,
 			BigDecimal SMSDRIS,BigDecimal SMGRANULE,byte[] SMGEOMETRY,Integer  SMUSERID,Integer  SMLIBTILEID,
-			BigDecimal SMAREA,BigDecimal SMPERIMETER,Integer FIELD_SMUSERID,String ADMINCODE,String KIND,String NAME,
-			String PY,String CITYADCODE,String PROADCODE,BigDecimal CENTERX,BigDecimal CENTERY,
-			BigDecimal LEVELFLAG,String PROVINCENAME,String CITYNAME){	
+			BigDecimal SMAREA,BigDecimal SMPERIMETER,Integer PID,String TFBH){	
 		Connection connect = null;
 //      Statement statement = null;
 		PreparedStatement preState = null;
 		ResultSet resultSet = null;
 		 try {
 			 Class.forName("oracle.jdbc.driver.OracleDriver");
-			connect = DriverManager.getConnection("jdbc:oracle:thin:@10.10.68.248:1521:orcl", "riskcontrol", "riskcontrol");
+			connect = DriverManager.getConnection("jdbc:oracle:thin:@10.133.198.50:1521:fcfk ", "fcfkdb", "fcfkdb_1009");
 			
-			String sql = "insert into MYAREA(SMID,SMKEY,SMSDRIW,SMSDRIN,SMSDRIE,SMSDRIS,SMGRANULE,SMGEOMETRY,SMUSERID,SMLIBTILEID,SMAREA,SMPERIMETER,FIELD_SMUSERID,ADMINCODE,KIND,NAME,PY,CITYADCODE,PROADCODE,CENTERX,CENTERY,LEVELFLAG,PROVINCENAME,CITYNAME)"
-					+ " values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			String sql = "insert into TF_10M(SMID,SMKEY,SMSDRIW,SMSDRIN,SMSDRIE,SMSDRIS,SMGRANULE,SMGEOMETRY,SMUSERID,SMLIBTILEID,SMAREA,SMPERIMETER,PID,TFBH)"
+					+ " values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 //           PreparedStatement preState = connect.prepareStatement("select  * from tb1_dept where id = ?");
            preState = connect.prepareStatement(sql);
            //插入的时候索引是从1 开始的，不是从0开始的
@@ -147,18 +135,8 @@ public class OracleToOracle {
            preState.setInt(10, SMLIBTILEID);
            preState.setBigDecimal(11, SMAREA);
            preState.setBigDecimal(12, SMPERIMETER);
-           preState.setInt(13, FIELD_SMUSERID);
-           preState.setString(14, ADMINCODE);
-           preState.setString(15, KIND);
-           preState.setString(16, NAME);
-           preState.setString(17, PY);
-           preState.setString(18, CITYADCODE);
-           preState.setString(19, PROADCODE);
-           preState.setBigDecimal(20, CENTERX);
-           preState.setBigDecimal(21, CENTERY);
-           preState.setBigDecimal(22, LEVELFLAG);
-           preState.setString(23, PROVINCENAME);
-           preState.setString(24, CITYNAME);
+           preState.setInt(13, PID);
+           preState.setString(14, TFBH);
            
            preState.executeUpdate();
 		   System.out.println("========插入成功============");
