@@ -8,11 +8,16 @@ import java.net.URLDecoder;
 import java.util.regex.Pattern;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 
 
 
 public class Hello{
     public static void main(String[] args){
+    	 String  aaString = "";
+    	 if(StringUtils.isEmpty(aaString)){
+    		 System.out.println("========aaaaaa===========");
+    	 }
 //        String str="123,assume345contribute";
 //        System.out.println(str.replaceAll("\\d+",""));
     	String [] pictureArray= "4.2.4".split(",");
@@ -22,9 +27,10 @@ public class Hello{
     	System.out.println(str2);
     	System.out.println("、存在地下资产".indexOf("、存在地下资产"));
      // 要求将里面的字符取出，也就是说按照数字拆分
-        String str = "11Adsd1Bdfd22C333Dere4444Edf55555Fdf" ;
+//        String str = "11Adsd1Bdfd22C333Dere4444Edf55555Fdf" ;
+        String str="1、 存在地下资产2、 存在砖木结构厂房3、 企业所在区属于高雷区8、 电气线路使用年限超过10年9、 厂区历史上有进水历史";
         // 指定好一个字符串
-        String pat = "\\d+" ;
+        String pat = "\\d+[、]" ;
         // 指定好正则表达式
         Pattern p = Pattern.compile(pat) ;
         // 实例化Pattern类

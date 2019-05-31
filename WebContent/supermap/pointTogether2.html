@@ -28,6 +28,7 @@
     layer = new SuperMap.Layer.TiledDynamicRESTLayer("china_province@areakind", url, null, {maxResolution: "auto"});
     //监听图层信息加载完成事件
     layer.events.on({"layerInitialized": addLayer});
+    
     function addLayer() {
 			//创建聚散图层并添加layers
 			clusterLayer = new SuperMap.Layer.ClusterLayer("Cluster",{

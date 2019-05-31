@@ -1,4 +1,4 @@
-package test;
+package thread_10;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -62,9 +62,9 @@ public class pushDataMap implements Runnable {
 			conn= DriverManager.getConnection(url, user, password);
 			
         	String sqladd= "select * from prpdcode";
-		    //3.Ô¤±àÒëÐèÒªÖ´ÐÐµÄsql
+		    //3.Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÒªÖ´ï¿½Ðµï¿½sql
 	        pstmAdd = conn.prepareStatement(sqladd);
-	        //Ö´ÐÐsql²¢·µ»Ø²éÑ¯½á¹û
+	        //Ö´ï¿½ï¿½sqlï¿½ï¿½ï¿½ï¿½ï¿½Ø²ï¿½Ñ¯ï¿½ï¿½ï¿½
 	        rsAdd = pstmAdd.executeQuery();
 	        Map<String, String> map =new HashMap<String, String>();
 	        while(rsAdd.next()){
@@ -72,11 +72,11 @@ public class pushDataMap implements Runnable {
 	        }
 	        
 	        
-			//2£¬±àÐ´sqlÓï¾ä
+			//2ï¿½ï¿½ï¿½ï¿½Ð´sqlï¿½ï¿½ï¿½
 		    String sql="select count(*) from riskmap_address where score is null";
-		    //3.Ô¤±àÒëÐèÒªÖ´ÐÐµÄsql
+		    //3.Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÒªÖ´ï¿½Ðµï¿½sql
 	        pstm = conn.prepareStatement(sql);
-	        //Ö´ÐÐsql²¢·µ»Ø²éÑ¯½á¹û
+	        //Ö´ï¿½ï¿½sqlï¿½ï¿½ï¿½ï¿½ï¿½Ø²ï¿½Ñ¯ï¿½ï¿½ï¿½
 	        rs = pstm.executeQuery();
 	        if(rs.next())
 	        {
@@ -88,7 +88,7 @@ public class pushDataMap implements Runnable {
 
 			    String sql1="select skip ? first ? * from riskmap_address where score is null order by addressid";
 			    conn= DriverManager.getConnection(url, user, password);
-			    //3.Ô¤±àÒëÐèÒªÖ´ÐÐµÄsql
+			    //3.Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÒªÖ´ï¿½Ðµï¿½sql
 		        pstm1 = conn.prepareStatement(sql1);
 		        pstm1.setInt(1, pageNo*dataCount/10);
 		        if(Thread.currentThread().getName().charAt(7) != '9') {
@@ -97,7 +97,7 @@ public class pushDataMap implements Runnable {
 		        	pstm1.setInt(2, dataCount%10+dataCount/10);
 		        }
 	        	System.out.println(pageNo+"***********"+pageNo*dataCount/10);
-		        //Ö´ÐÐsql²¢·µ»Ø²éÑ¯½á¹û
+		        //Ö´ï¿½ï¿½sqlï¿½ï¿½ï¿½ï¿½ï¿½Ø²ï¿½Ñ¯ï¿½ï¿½ï¿½
 		        rs1 = pstm1.executeQuery();
 		        
 		        while(rs1.next()) {
@@ -114,10 +114,10 @@ public class pushDataMap implements Runnable {
 			        		}else if(map.containsKey(postcode.substring(0, 2)+"0000")) {
 			        			postName =map.get(postcode.substring(0, 2)+"0000");
 			        		}else {
-			        			postName ="È«¹ú";
+			        			postName ="È«ï¿½ï¿½";
 			        		}
 			        	}else {
-			        		postName ="È«¹ú";
+			        		postName ="È«ï¿½ï¿½";
 			        	}
 			            System.out.println(subDun(addressname)+"**"+Thread.currentThread().getName());
 				        HttpClient client = HttpClients.createDefault();
@@ -140,7 +140,7 @@ public class pushDataMap implements Runnable {
 		    				double lon= stringToDouble(gps.getWgLon());
 				            
 				            String sql3 ="update riskmap_address set pointx = ?,pointy=?,pointx2 = ?,pointy2=?,score=?,citycode=?,manualflag=? where addressid =?";
-						    //3.Ô¤±àÒëÐèÒªÖ´ÐÐµÄsql
+						    //3.Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÒªÖ´ï¿½Ðµï¿½sql
 					        pstm3 = conn.prepareStatement(sql3);
 					        
 					        pstm3.setString(1, String.valueOf(lon));
@@ -161,7 +161,7 @@ public class pushDataMap implements Runnable {
 				        }catch (Exception e) {
 				        	e.printStackTrace();
 				            String sql3 ="update riskmap_address set manualflag=? where addressid =?";
-						    //3.Ô¤±àÒëÐèÒªÖ´ÐÐµÄsql
+						    //3.Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÒªÖ´ï¿½Ðµï¿½sql
 					        pstm3 = conn.prepareStatement(sql3);
 					        
 					        pstm3.setString(1, "0");
@@ -173,7 +173,7 @@ public class pushDataMap implements Runnable {
 	
 		        
 	        }
-	        System.out.println("ÊýÁ¿Îª"+count);	        
+	        System.out.println("ï¿½ï¿½ï¿½ï¿½Îª"+count);	        
 	        }catch (Exception e) {
 	        	e.printStackTrace();
 				// TODO: handle exception
@@ -208,26 +208,26 @@ public class pushDataMap implements Runnable {
 
 }
     
-    //½ØÈ¡µ½¡¢Ö®Ç°
+    //ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Ö®Ç°
 	public static String subDun(String result) {
-		result =result.trim().replaceAll("\\s*", "").replaceAll("#", "").replaceAll("\\([^\\(^\\)]*\\)", "").replaceAll("\\£¨[^\\£¨^\\£©]*\\£©", "")
+		result =result.trim().replaceAll("\\s*", "").replaceAll("#", "").replaceAll("\\([^\\(^\\)]*\\)", "").replaceAll("\\ï¿½ï¿½[^\\ï¿½ï¿½^\\ï¿½ï¿½]*\\ï¿½ï¿½", "")
 				.replaceAll("\\\\","");
-		if(result.indexOf("¡¢")>-1) {
-			result = result.substring(0,result.indexOf("¡¢")+1);
+		if(result.indexOf("ï¿½ï¿½")>-1) {
+			result = result.substring(0,result.indexOf("ï¿½ï¿½")+1);
 		}
 //				result=subCun(result);
 //		result=sub(result);
 		return result.trim();
 	}
-    //½ØÈ¡µ½xxºÅÖ®Ç°
+    //ï¿½ï¿½È¡ï¿½ï¿½xxï¿½ï¿½Ö®Ç°
 	public static String sub(String s) {
 		String result =s;
-		if(s.lastIndexOf("ºÅ")>-1) {
+		if(s.lastIndexOf("ï¿½ï¿½")>-1) {
 			for(int i =1;i<s.length();i++) {
-				if(Character.isDigit(s.charAt(s.lastIndexOf("ºÅ")-i))) {
+				if(Character.isDigit(s.charAt(s.lastIndexOf("ï¿½ï¿½")-i))) {
 					continue;
 				}else {
-					result = s.substring(0,s.lastIndexOf("ºÅ")-i+1);
+					result = s.substring(0,s.lastIndexOf("ï¿½ï¿½")-i+1);
 					break;
 				}
 			}
@@ -236,42 +236,42 @@ public class pushDataMap implements Runnable {
 	}
 	
 	
-	// ½ØÈ¡µ½Â¥¡¢ÏÃ¡¢µÀ¡¢Â·¡¢½Ö
+	// ï¿½ï¿½È¡ï¿½ï¿½Â¥ï¿½ï¿½ï¿½Ã¡ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½
 	public static String subCun(String s) {
 		String result =s;
 		if(s.indexOf("Â¥")>-1) {
 			result = s.substring(0,s.lastIndexOf("Â¥")+1);
-		}else if(s.indexOf("ÏÃ")>-1) {
-			result = s.substring(0,s.lastIndexOf("ÏÃ")+1);
-		}else if(s.indexOf("Ð¡Çø")>-1) {
-			result = s.substring(0,s.lastIndexOf("Ð¡Çø")+1);
-		}else if(s.indexOf("µÀ")>-1) {
-			result = s.substring(0,s.lastIndexOf("µÀ")+1);
+		}else if(s.indexOf("ï¿½ï¿½")>-1) {
+			result = s.substring(0,s.lastIndexOf("ï¿½ï¿½")+1);
+		}else if(s.indexOf("Ð¡ï¿½ï¿½")>-1) {
+			result = s.substring(0,s.lastIndexOf("Ð¡ï¿½ï¿½")+1);
+		}else if(s.indexOf("ï¿½ï¿½")>-1) {
+			result = s.substring(0,s.lastIndexOf("ï¿½ï¿½")+1);
 		}else if(s.indexOf("Â·")>-1) {
 			result = s.substring(0,s.lastIndexOf("Â·")+1);
-		}else if(s.indexOf("½Ö")>-1) {
-			result = s.substring(0,s.lastIndexOf("½Ö")+1);
+		}else if(s.indexOf("ï¿½ï¿½")>-1) {
+			result = s.substring(0,s.lastIndexOf("ï¿½ï¿½")+1);
 		}
-//		else if(s.indexOf("Ô°Çø")>-1) {
-//			result = s.substring(0,s.lastIndexOf("Ô°Çø")+1);
-//		}else if(s.indexOf("¹¤ÒµÔ°")>-1) {
-//			result = s.substring(0,s.lastIndexOf("¹¤ÒµÔ°")+1);
-//		}else if(s.indexOf("´å")>-1) {
-//			result = s.substring(0,s.lastIndexOf("´å")+1);
+//		else if(s.indexOf("Ô°ï¿½ï¿½")>-1) {
+//			result = s.substring(0,s.lastIndexOf("Ô°ï¿½ï¿½")+1);
+//		}else if(s.indexOf("ï¿½ï¿½ÒµÔ°")>-1) {
+//			result = s.substring(0,s.lastIndexOf("ï¿½ï¿½ÒµÔ°")+1);
+//		}else if(s.indexOf("ï¿½ï¿½")>-1) {
+//			result = s.substring(0,s.lastIndexOf("ï¿½ï¿½")+1);
 //		}
 		return result;
 	}
-	// ½ØÈ¡µ½Â¥¡¢ÏÃ¡¢µÀ¡¢Â·¡¢½Ö
+	// ï¿½ï¿½È¡ï¿½ï¿½Â¥ï¿½ï¿½ï¿½Ã¡ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½
 	public static String subNoDao(String s) {
 		String result =s;
-		if(s.indexOf("½Ö")>-1) {
-			result = s.substring(0,s.indexOf("½Ö")+1);
-		}else if(s.indexOf("Ô°Çø")>-1) {
-			result = s.substring(0,s.indexOf("Ô°Çø")+1);
-		}else if(s.indexOf("¹¤ÒµÔ°")>-1) {
-			result = s.substring(0,s.indexOf("¹¤ÒµÔ°")+1);
-		}else if(s.indexOf("´å")>-1) {
-			result = s.substring(0,s.indexOf("´å")+1);
+		if(s.indexOf("ï¿½ï¿½")>-1) {
+			result = s.substring(0,s.indexOf("ï¿½ï¿½")+1);
+		}else if(s.indexOf("Ô°ï¿½ï¿½")>-1) {
+			result = s.substring(0,s.indexOf("Ô°ï¿½ï¿½")+1);
+		}else if(s.indexOf("ï¿½ï¿½ÒµÔ°")>-1) {
+			result = s.substring(0,s.indexOf("ï¿½ï¿½ÒµÔ°")+1);
+		}else if(s.indexOf("ï¿½ï¿½")>-1) {
+			result = s.substring(0,s.indexOf("ï¿½ï¿½")+1);
 		}
 		return result;
 	}
@@ -282,7 +282,7 @@ public class pushDataMap implements Runnable {
    	 return dou;
    }
    /**
-	 * * »ðÐÇ×ø±êÏµ (GCJ-02) to 84 * * @param lon * @param lat * @return
+	 * * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµ (GCJ-02) to 84 * * @param lon * @param lat * @return
 	 * */
 	public static Gps gcj_To_Gps84(double lat, double lon) {
 		Gps gps = transform(lat, lon);
@@ -334,10 +334,10 @@ public class pushDataMap implements Runnable {
 		return false;
 	}
 	 /**
-     * Ö´ÐÐÒ»¸ö´ø²ÎÊýµÄHTTP GETÇëÇó£¬·µ»ØÇëÇóÏìÓ¦µÄJSON×Ö·û´®
+     * Ö´ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½HTTP GETï¿½ï¿½ï¿½ó£¬·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½JSONï¿½Ö·ï¿½ï¿½ï¿½
      *
-     * @param url ÇëÇóµÄURLµØÖ·
-     * @return ·µ»ØÇëÇóÏìÓ¦µÄJSON×Ö·û´®
+     * @param url ï¿½ï¿½ï¿½ï¿½ï¿½URLï¿½ï¿½Ö·
+     * @return ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½JSONï¿½Ö·ï¿½ï¿½ï¿½
      */
     public static String doGet(String url, String param) {
 

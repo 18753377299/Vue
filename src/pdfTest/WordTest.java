@@ -102,7 +102,7 @@ public class WordTest {
 //            Template template = configuration.getTemplate("dddd.ftl");
 //            Template template = configuration.getTemplate("dddd (2).ftl");
 
-            File outFile = new File("E:/wordTest10.doc");// D:/temp2这个路径下的temp2文件夹是手动创建的
+            File outFile = new File("E:/wordTest11.doc");// D:/temp2这个路径下的temp2文件夹是手动创建的
             Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile), "UTF-8"));
             template.process(dataMap, out);
             out.close();

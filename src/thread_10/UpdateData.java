@@ -110,6 +110,7 @@ class MoreThread extends Thread {
 					+ " select* from  "+ riskMap_Address +" where VALIDSTATUS ='1' and "
 					+ "(RAINSCALE is null or THUNDERSTORMSCALE is null or SNOWSTORMSCALE is null or HAILSCALE is null or FLOODSCALE is null or TYPHOONSCALE is null or LANDSLIDESCALE is null or EQPGA  is null) order by SMID "
 					+ ") a where ROWNUM<=(?)) where rn>? ";
+			
 //					String sql="select SMID,SMX,SMY from " + riskMap_Address
 //							+ " where VALIDSTATUS ='1' and (RAINSCALE is null or THUNDERSTORMSCALE is null or SNOWSTORMSCALE is null or HAILSCALE is null or FLOODSCALE is null or TYPHOONSCALE is null or LANDSLIDESCALE is null or EQPGA  is null) "
 //							+ "and SMID between "+start+" and " + end;
