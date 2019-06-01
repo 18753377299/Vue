@@ -75,7 +75,6 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-ooxml-3.17-javadoc.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-ooxml-3.17-sources.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-ooxml-3.17.jar"/>
-	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-ooxml-schemas-3.17.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-scratchpad-3.17.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-tl-1.4.2.jar" sourcepath="C:/Users/Administrator/AppData/Local/Temp/.org.sf.feeling.decompiler1559266133874/source/poi-tl-1.4.2-sources.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/providerutil.jar"/>
@@ -88,5 +87,6 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/xmlbeans-2.6.2.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/xmlworker-5.5.12.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/xwork-2.1.3.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-ooxml-schemas-3.11.jar"/>
 	<classpathentry kind="output" path="WebContent/WEB-INF/classes"/>
 </classpath>
