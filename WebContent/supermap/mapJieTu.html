@@ -26,13 +26,14 @@
 <!-- <link href='./css/bootstrap-responsive.min.css' rel='stylesheet' /> -->
 <script src='../libs/SuperMap.Include.js'></script>
 <script src='js/MapToImg.js'></script>
+<script src='js/riskMapPolygon.js'></script>
 <script type="text/javascript">
 var PrintMap = {};
 var LAYER_COUNT = 0;
 var LAYER_LENGTH = 0;
 
 var featuresOrigin = [];
-var map,layer,markerLayer;
+var map,layer,markerLayer,vectorLayer;
 var host = document.location.toString().match(/file:\/\//)?"http://localhost:8090":'http://' + document.location.host;
 smCompanyArr = [
 ["北京超图软件股份有限公司上海分公司",111,35,"上海市闸北虬江路1000号聚源大厦办公楼1505室"],
@@ -63,12 +64,13 @@ function init(){
 	]
 	});
 	markerLayer = new SuperMap.Layer.Markers("Markers");
+	vectorLayer = new SuperMap.Layer.Vector("Vector");
 }
 
 function addLayer() {
-// 	map.addLayers([layer,markerLayer]);
+	map.addLayers([layer,markerLayer,vectorLayer]);
 	// map.setCenter(new SuperMap.LonLat(11733502.481499, 4614406.969325), 4);
-	map.addLayers([layer]);
+// 	map.addLayers([layer]);
 	map.setCenter(new SuperMap.LonLat(116, 39), 4);
 }
 
@@ -86,29 +88,45 @@ function clearAllFeatures(){
 
 //添加标注
 function createMarker(){
-	markerLayer.clearMarkers();
-	for(var i = 0,lengthCompany = smCompanyArr.length;i < lengthCompany ;i++){
-	var point = new SuperMap.Geometry.Point(parseFloat(smCompanyArr[i][1]),parseFloat(smCompanyArr[i][2])),
-	strContent = new Array(smCompanyArr[i][0],smCompanyArr[i][3]),
-	size = new SuperMap.Size(32, 32),
-	offset = new SuperMap.Pixel(-(size.w / 2), -size.h),
-	feature = new SuperMap.Feature(markerLayer, new SuperMap.LonLat(point.x, point.y));
-	feature.data.icon = new SuperMap.Icon("images/markerflag.png", size, offset);
-	var marker = feature.createMarker();
-	var markerClick = function (evt,feature,strContent) {
-	SuperMap.Event.stop(evt);
-	this.win.open(feature,{
-	"name":strContent[0],
-	"informition":strContent[1]
-	});
-	};
-	marker.events.register("click", feature, function(feature,strContent){
-	return function(evt){
-	markerClick(evt,feature,strContent);
-	}
-	}(feature,strContent));
-	markerLayer.addMarker(marker);
-	}
+// 	markerLayer.clearMarkers();
+// 	for(var i = 0,lengthCompany = smCompanyArr.length;i < lengthCompany ;i++){
+// 	var point = new SuperMap.Geometry.Point(parseFloat(smCompanyArr[i][1]),parseFloat(smCompanyArr[i][2])),
+// 	strContent = new Array(smCompanyArr[i][0],smCompanyArr[i][3]),
+// 	size = new SuperMap.Size(32, 32),
+// 	offset = new SuperMap.Pixel(-(size.w / 2), -size.h),
+// 	feature = new SuperMap.Feature(markerLayer, new SuperMap.LonLat(point.x, point.y));
+// 	feature.data.icon = new SuperMap.Icon("images/markerflag.png", size, offset);
+// 	var marker = feature.createMarker();
+// 	var markerClick = function (evt,feature,strContent) {
+// 	SuperMap.Event.stop(evt);
+// 	this.win.open(feature,{
+// 	"name":strContent[0],
+// 	"informition":strContent[1]
+// 	});
+// 	};
+// 	marker.events.register("click", feature, function(feature,strContent){
+// 	return function(evt){
+// 	markerClick(evt,feature,strContent);
+// 	}
+// 	}(feature,strContent));
+// 	markerLayer.addMarker(marker);
+// 	}
+	console.log(riskMapPolygon)
+	var  geometry =new SuperMap.Format.GeoJSON().read(riskMapPolygon,'Geometry')
+// 	let style = {
+// 	  fillColor: "#ee9900",
+// 	  // fillOpacity: 0.4,
+// 	  fillOpacity: 1,
+// 	  strokeColor:"#ee9900",
+// 	  strokeOpacity: 0.4,
+// 	  strokeWidth: 1
+// 	//         pointRadius:6
+// 	}
+	let style = {}
+	var feature = new SuperMap.Feature.Vector(geometry,null,style);
+	vectorLayer.addFeatures([feature]);
+
+	
 }
 
 this.win = new InforWindow_z({"map":map});
